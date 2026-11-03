@@ -1,0 +1,77 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/coffee_cream"
+    android:fillViewport="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="32dp">
+        <ImageButton
+            android:id="@+id/addressBackButton"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_filter_button"
+            android:contentDescription="@string/back_button_description"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back"
+            android:tint="@color/coffee_brown" />
+        <TextView
+            android:id="@+id/addressTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/address_title"
+            android:textColor="@color/coffee_brown_dark"
+            android:textSize="30sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/address_subtitle"
+            android:textColor="@color/coffee_muted"
+            android:textSize="14sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/address_label"
+            android:textColor="@color/coffee_brown_dark"
+            android:textSize="14sp" />
+        <EditText
+            android:id="@+id/addressInput"
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            android:background="@drawable/bg_input"
+            android:gravity="top|start"
+            android:hint="@string/address_hint"
+            android:inputType="textPostalAddress|textMultiLine|textCapSentences"
+            android:padding="16dp"
+            android:textColor="@color/coffee_text"
+            android:textColorHint="@color/coffee_muted"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/addressError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/coffee_error"
+            android:textSize="12sp"
+            android:visibility="gone" />
+        <Button
+            android:id="@+id/addressSaveButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_primary_button"
+            android:text="@string/address_save"
+            android:textAllCaps="false"
+            android:textColor="@color/coffee_surface"
+            android:textSize="16sp" />
+    </LinearLayout>
+</ScrollView>

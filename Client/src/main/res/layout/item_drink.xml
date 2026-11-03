@@ -1,0 +1,92 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drinkCard"
+    android:layout_width="176dp"
+    android:layout_height="240dp"
+    android:background="@drawable/bg_product_card"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="144dp"
+        android:background="@drawable/bg_drink_iced"
+        android:clipToOutline="true">
+        <ImageView
+            android:id="@+id/drinkImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop" />
+        <TextView
+            android:id="@+id/drinkRating"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_gravity="top|start"
+            android:layout_margin="9dp"
+            android:background="@drawable/bg_rating_badge"
+            android:gravity="center"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textColor="@color/coffee_brown_dark"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+        <ImageButton
+            android:id="@+id/favoriteDrinkButton"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="9dp"
+            android:background="@drawable/bg_rating_badge"
+            android:contentDescription="@string/home_show_favorites"
+            android:padding="6dp"
+            android:src="@drawable/ic_favorite_border"
+            android:tint="@color/coffee_brown" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/drinkName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/coffee_brown_dark"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/drinkDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/coffee_muted"
+        android:textSize="11sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/drinkPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/coffee_brown"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/addDrinkButton"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:background="@drawable/bg_add_button"
+            android:clickable="true"
+            android:contentDescription="@string/add_iced_drink"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="+"
+            android:textColor="@color/coffee_surface"
+            android:textSize="20sp" />
+    </LinearLayout>
+</LinearLayout>
