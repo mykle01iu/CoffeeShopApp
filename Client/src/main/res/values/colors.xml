@@ -1,0 +1,16 @@
+<resources>
+    <color name="coffee_brown">#654536</color>
+    <color name="coffee_brown_dark">#3C2820</color>
+    <color name="coffee_cream">#F8F4EE</color>
+    <color name="coffee_surface">#FFFDFA</color>
+    <color name="coffee_text">#3C2820</color>
+    <color name="coffee_muted">#7D6C61</color>
+    <color name="coffee_accent">#A66B3F</color>
+    <color name="coffee_chip">#EEE5DA</color>
+    <color name="coffee_latte">#EEE5DA</color>
+    <color name="coffee_ice">#EEE5DA</color>
+    <color name="coffee_promo">#654536</color>
+    <color name="coffee_promo_badge">#EEE5DA</color>
+    <color name="coffee_border">#E4D9CE</color>
+    <color name="coffee_error">#9B2C22</color>
+</resources>

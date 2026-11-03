@@ -1,0 +1,139 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/coffee_cream"
+    android:fillViewport="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingTop="32dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="32dp">
+        <ImageButton
+            android:id="@+id/profileBackButton"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_filter_button"
+            android:contentDescription="@string/back_button_description"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back"
+            android:tint="@color/coffee_brown" />
+        <ImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="28dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/logo_moc_mien_transparent" />
+        <TextView
+            android:id="@+id/profileTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@string/profile_title"
+            android:textColor="@color/coffee_brown_dark"
+            android:textSize="30sp" />
+        <TextView
+            android:id="@+id/profileStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:lineSpacingMultiplier="1.45"
+            android:text="@string/profile_login_prompt"
+            android:textColor="@color/coffee_muted"
+            android:textSize="14sp" />
+        <LinearLayout
+            android:id="@+id/profileInfoCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_input"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_name_label"
+                android:textColor="@color/coffee_muted"
+                android:textSize="12sp" />
+            <TextView
+                android:id="@+id/profileNameValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/coffee_brown_dark"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/profile_identifier_label"
+                android:textColor="@color/coffee_muted"
+                android:textSize="12sp" />
+            <TextView
+                android:id="@+id/profileIdentifierValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/coffee_brown_dark"
+                android:textSize="14sp" />
+        </LinearLayout>
+        <Button
+            android:id="@+id/profileLoginButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_primary_button"
+            android:text="@string/profile_login_action"
+            android:textAllCaps="false"
+            android:textColor="@color/coffee_surface"
+            android:textSize="16sp" />
+        <Button
+            android:id="@+id/profileLogoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_input"
+            android:text="@string/logout_button"
+            android:textAllCaps="false"
+            android:textColor="@color/coffee_brown"
+            android:visibility="gone" />
+        <LinearLayout
+            android:id="@+id/profileAddressButton"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_input"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_location"
+                android:tint="@color/coffee_brown" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:text="@string/profile_address_action"
+                android:textColor="@color/coffee_brown_dark"
+                android:textSize="15sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="›"
+                android:textColor="@color/coffee_muted"
+                android:textSize="24sp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

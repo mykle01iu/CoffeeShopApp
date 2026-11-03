@@ -1,0 +1,13 @@
+<resources>
+    <dimen name="space_1">4dp</dimen>
+    <dimen name="space_2">8dp</dimen>
+    <dimen name="space_3">12dp</dimen>
+    <dimen name="space_4">16dp</dimen>
+    <dimen name="space_5">24dp</dimen>
+    <dimen name="space_6">32dp</dimen>
+    <dimen name="screen_horizontal">24dp</dimen>
+    <dimen name="corner_input">12dp</dimen>
+    <dimen name="corner_card">20dp</dimen>
+    <dimen name="control_height">56dp</dimen>
+    <dimen name="chip_height">40dp</dimen>
+</resources>

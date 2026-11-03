@@ -1,0 +1,139 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/coffee_cream"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/menuScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp">
+            <TextView
+                android:id="@+id/menuTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:text="@string/menu_title"
+                android:textColor="@color/coffee_brown_dark"
+                android:textSize="28sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="24dp"
+                android:text="@string/menu_subtitle"
+                android:textColor="@color/coffee_muted"
+                android:textSize="14sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/bg_input"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@string/search_hint"
+                    android:src="@drawable/ic_search"
+                    android:tint="@color/coffee_muted" />
+                <EditText
+                    android:id="@+id/menuSearchInput"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/search_hint"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textColor="@color/coffee_text"
+                    android:textColorHint="@color/coffee_muted"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:scrollbars="none">
+                <LinearLayout
+                    android:id="@+id/menuCategoryContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+            <TextView
+                android:id="@+id/menuResultCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="24dp"
+                android:textColor="@color/coffee_muted"
+                android:textSize="12sp" />
+            <LinearLayout
+                android:id="@+id/menuProductRows"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="24dp"
+                android:orientation="vertical" />
+            <TextView
+                android:id="@+id/menuEmptyState"
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:gravity="center"
+                android:text="@string/home_search_empty"
+                android:textColor="@color/coffee_muted"
+                android:textSize="14sp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:background="@color/coffee_surface"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp">
+        <LinearLayout android:id="@+id/navHomeItem" style="@style/BottomNavigationItem">
+            <ImageView style="@style/BottomNavigationIcon" android:src="@drawable/ic_home" android:tint="@color/coffee_muted" />
+            <TextView style="@style/BottomNavigationLabel" android:text="@string/nav_home" android:textColor="@color/coffee_muted" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/navMenuItem" style="@style/BottomNavigationItem">
+            <ImageView style="@style/BottomNavigationIcon" android:src="@drawable/ic_menu" android:tint="@color/coffee_brown" />
+            <TextView style="@style/BottomNavigationLabel" android:text="@string/nav_menu" android:textColor="@color/coffee_brown" android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/navOrdersItem" style="@style/BottomNavigationItem">
+            <ImageView style="@style/BottomNavigationIcon" android:src="@drawable/ic_orders" android:tint="@color/coffee_muted" />
+            <TextView style="@style/BottomNavigationLabel" android:text="@string/nav_orders" android:textColor="@color/coffee_muted" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/navProfileItem" style="@style/BottomNavigationItem">
+            <ImageView style="@style/BottomNavigationIcon" android:src="@drawable/ic_profile" android:tint="@color/coffee_muted" />
+            <TextView style="@style/BottomNavigationLabel" android:text="@string/nav_profile" android:textColor="@color/coffee_muted" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
