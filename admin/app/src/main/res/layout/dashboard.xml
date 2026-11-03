@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dashboard_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/surface_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="MỘC MIÊN  /  QUẢN TRỊ" android:textColor="@color/coffee" android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.08" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="Tổng quan" android:textColor="@color/ink" android:textSize="27sp" android:textStyle="bold" />
+            </LinearLayout>
+            <TextView android:id="@+id/logout_button" android:layout_width="46dp" android:layout_height="46dp" android:background="@drawable/avatar_bg" android:clickable="true" android:focusable="true" android:gravity="center" android:text="Thoát" android:textColor="@color/coffee" android:textSize="12sp" android:textStyle="bold" />
+        </LinearLayout>
+        <TextView android:id="@+id/dashboard_greeting" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="9dp" android:text="Xin chào, Quản trị viên 👋" android:textColor="@color/muted" android:textSize="14sp" />
+        <TextView android:id="@+id/dashboard_date" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="Thứ Ba, 03/11/2026" android:textColor="@color/muted" android:textSize="12sp" />
+
+        <LinearLayout android:id="@+id/revenue_today_card" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp" android:background="@drawable/hero_bg" android:clickable="true" android:focusable="true" android:orientation="vertical" android:padding="20dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="DOANH THU HÔM NAY" android:textColor="#E8D7C7" android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.1" />
+            <TextView android:id="@+id/revenue_today" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="12.850.000 ₫" android:textColor="@color/white" android:textSize="29sp" android:textStyle="bold" />
+            <TextView android:id="@+id/revenue_change" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="↗  12,8% so với hôm qua" android:textColor="#D5E7D8" android:textSize="12sp" />
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="15dp" android:background="#33FFFFFF" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="13dp" android:orientation="horizontal">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tuần này" android:textColor="#E8D7C7" android:textSize="11sp" />
+                    <TextView android:id="@+id/revenue_week" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="68.400.000 ₫" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tháng này" android:textColor="#E8D7C7" android:textSize="11sp" />
+                    <TextView android:id="@+id/revenue_month" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="264.900.000 ₫" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:text="Truy cập nhanh" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal">
+            <LinearLayout android:id="@+id/open_orders" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginEnd="6dp" android:layout_weight="1" android:background="@drawable/card_bg" android:clickable="true" android:focusable="true" android:gravity="center_vertical" android:orientation="horizontal" android:padding="13dp">
+                <TextView android:layout_width="38dp" android:layout_height="38dp" android:background="@drawable/icon_badge" android:gravity="center" android:text="▤" android:textColor="@color/coffee" android:textSize="20sp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="9dp" android:text="Đơn hàng" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/open_inventory" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:layout_weight="1" android:background="@drawable/card_bg" android:clickable="true" android:focusable="true" android:gravity="center_vertical" android:orientation="horizontal" android:padding="13dp">
+                <TextView android:layout_width="38dp" android:layout_height="38dp" android:background="@drawable/icon_badge" android:gravity="center" android:text="▦" android:textColor="@color/coffee" android:textSize="20sp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="9dp" android:text="Kho" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:text="Hoạt động cửa hàng" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal">
+            <LinearLayout android:layout_width="0dp" android:layout_height="96dp" android:layout_marginEnd="6dp" android:layout_weight="1" android:background="@drawable/card_bg" android:gravity="center_vertical" android:orientation="vertical" android:padding="13dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SẢN PHẨM ĐÃ BÁN" android:textColor="@color/muted" android:textSize="10sp" android:textStyle="bold" />
+                <TextView android:id="@+id/orders_today" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="89" android:textColor="@color/ink" android:textSize="25sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Hôm nay · 4 mặt hàng" android:textColor="@color/muted" android:textSize="11sp" />
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_height="96dp" android:layout_marginStart="6dp" android:layout_weight="1" android:background="@drawable/card_bg" android:gravity="center_vertical" android:orientation="vertical" android:padding="13dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="GIÁ TRỊ TRUNG BÌNH" android:textColor="@color/muted" android:textSize="10sp" android:textStyle="bold" />
+                <TextView android:id="@+id/avg_order_value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="267.700 ₫" android:textColor="@color/ink" android:textSize="20sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Mỗi đơn" android:textColor="@color/muted" android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:background="@drawable/card_bg" android:gravity="center_vertical" android:orientation="horizontal" android:padding="13dp">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="SẢN PHẨM ĐANG KINH DOANH" android:textColor="@color/muted" android:textSize="10sp" android:textStyle="bold" />
+            <TextView android:id="@+id/product_total" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="24" android:textColor="@color/ink" android:textSize="20sp" android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:text="Doanh thu 7 ngày gần nhất" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:background="@drawable/card_bg" android:orientation="vertical" android:padding="16dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="132dp" android:gravity="bottom" android:orientation="horizontal">
+                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="bottom|center_horizontal"><View android:layout_width="16dp" android:layout_height="60dp" android:background="#B9ADA4" /></LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="bottom|center_horizontal"><View android:layout_width="16dp" android:layout_height="84dp" android:background="#B9ADA4" /></LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="bottom|center_horizontal"><View android:layout_width="16dp" android:layout_height="72dp" android:background="#B9ADA4" /></LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="bottom|center_horizontal"><View android:layout_width="16dp" android:layout_height="96dp" android:background="#B9ADA4" /></LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="bottom|center_horizontal"><View android:layout_width="16dp" android:layout_height="110dp" android:background="#B9ADA4" /></LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="bottom|center_horizontal"><View android:layout_width="16dp" android:layout_height="126dp" android:background="#B9ADA4" /></LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="bottom|center_horizontal"><View android:layout_width="16dp" android:layout_height="100dp" android:background="#70452F" /></LinearLayout>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="7dp" android:orientation="horizontal">
+                <TextView style="@style/ChartLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="T2" android:textColor="@color/muted" android:textSize="10sp" />
+                <TextView style="@style/ChartLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="T3" android:textColor="@color/muted" android:textSize="10sp" />
+                <TextView style="@style/ChartLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="T4" android:textColor="@color/muted" android:textSize="10sp" />
+                <TextView style="@style/ChartLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="T5" android:textColor="@color/muted" android:textSize="10sp" />
+                <TextView style="@style/ChartLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="T6" android:textColor="@color/muted" android:textSize="10sp" />
+                <TextView style="@style/ChartLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="T7" android:textColor="@color/muted" android:textSize="10sp" />
+                <TextView style="@style/ChartLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="CN" android:textColor="@color/coffee" android:textSize="10sp" android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:text="Sản phẩm bán chạy" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
+        <LinearLayout android:id="@+id/top_products_list" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:background="@drawable/card_bg" android:orientation="vertical" android:padding="15dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <TextView android:layout_width="24dp" android:layout_height="wrap_content" android:text="1" android:textColor="@color/coffee" android:textSize="14sp" android:textStyle="bold" />
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cà phê sữa đá" android:textColor="@color/ink" android:textSize="14sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="32 ly hôm nay" android:textColor="@color/muted" android:textSize="12sp" />
+                </LinearLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4.480.000 ₫" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="11dp" android:background="#14000000" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <TextView android:layout_width="24dp" android:layout_height="wrap_content" android:text="2" android:textColor="@color/coffee" android:textSize="14sp" android:textStyle="bold" />
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trà đào cam sả" android:textColor="@color/ink" android:textSize="14sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="21 ly hôm nay" android:textColor="@color/muted" android:textSize="12sp" />
+                </LinearLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3.150.000 ₫" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:text="Đơn hàng gần đây" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
+        <LinearLayout android:id="@+id/recent_orders_list" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:background="@drawable/card_bg" android:orientation="vertical" android:padding="15dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#HD1048" android:textColor="@color/ink" android:textSize="14sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="10:42 · Tại bàn 5" android:textColor="@color/muted" android:textSize="12sp" />
+                </LinearLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="#E7F0E8" android:paddingHorizontal="10dp" android:paddingVertical="5dp" android:text="Hoàn thành" android:textColor="#486B53" android:textSize="11sp" android:textStyle="bold" />
+            </LinearLayout>
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="11dp" android:background="#14000000" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#HD1047" android:textColor="@color/ink" android:textSize="14sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="10:35 · Mang đi" android:textColor="@color/muted" android:textSize="12sp" />
+                </LinearLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/filter_selected" android:paddingHorizontal="10dp" android:paddingVertical="5dp" android:text="Đang chuẩn bị" android:textColor="@color/white" android:textSize="11sp" android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:text="Cảnh báo tồn kho" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
+        <LinearLayout android:id="@+id/low_stock_list" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:background="@drawable/card_bg" android:orientation="vertical" android:padding="15dp" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:text="Quản lý nhanh" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal">
+            <LinearLayout android:id="@+id/open_products" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginEnd="6dp" android:layout_weight="1" android:background="@drawable/card_bg" android:clickable="true" android:focusable="true" android:gravity="center_vertical" android:orientation="vertical" android:padding="14dp">
+                <TextView android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/icon_badge" android:gravity="center" android:text="☕" android:textSize="20sp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="9dp" android:text="Sản phẩm" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/open_orders_bottom" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:layout_weight="1" android:background="@drawable/card_bg" android:clickable="true" android:focusable="true" android:gravity="center_vertical" android:orientation="vertical" android:padding="14dp">
+                <TextView android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/icon_badge" android:gravity="center" android:text="▤" android:textColor="@color/coffee" android:textSize="20sp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="9dp" android:text="Đơn hàng" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal">
+            <LinearLayout android:id="@+id/open_staff" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginEnd="6dp" android:layout_weight="1" android:background="@drawable/card_bg" android:clickable="true" android:focusable="true" android:gravity="center_vertical" android:orientation="vertical" android:padding="14dp">
+                <TextView android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/icon_badge" android:gravity="center" android:text="♙" android:textColor="@color/coffee" android:textSize="20sp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="9dp" android:text="Nhân viên" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/open_reports" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:layout_weight="1" android:background="@drawable/card_bg" android:clickable="true" android:focusable="true" android:gravity="center_vertical" android:orientation="vertical" android:padding="14dp">
+                <TextView android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/icon_badge" android:gravity="center" android:text="▥" android:textColor="@color/coffee" android:textSize="20sp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="9dp" android:text="Báo cáo" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal">
+            <LinearLayout android:id="@+id/open_inventory_bottom" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginEnd="6dp" android:layout_weight="1" android:background="@drawable/card_bg" android:clickable="true" android:focusable="true" android:gravity="center_vertical" android:orientation="vertical" android:padding="14dp">
+                <TextView android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/icon_badge" android:gravity="center" android:text="▦" android:textColor="@color/coffee" android:textSize="20sp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="9dp" android:text="Kho" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+            <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+        </LinearLayout>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:gravity="center" android:padding="12dp" android:text="Mộc Miên Admin  ·  v1.0" android:textColor="@color/muted" android:textSize="11sp" />
+    </LinearLayout>
+</ScrollView>
