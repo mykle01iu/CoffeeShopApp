@@ -2,7 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="surface_bg">#FFF9F4</color>
+    <color name="surface_bg">#EDEBE6</color>
+    <color name="beige">#F3E8D8</color>
     <color name="coffee">#70452F</color>
     <color name="ink">#2E241F</color>
     <color name="muted">#887D75</color>

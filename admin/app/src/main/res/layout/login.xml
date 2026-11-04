@@ -4,21 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/surface_bg">
+    android:background="@drawable/login_botanical_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="28dp">
+        android:paddingBottom="24dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="28dp"
+            android:paddingTop="28dp"
+            android:paddingEnd="28dp"
+            android:paddingBottom="14dp">
 
         <ImageView
-            android:layout_width="76dp"
-            android:layout_height="76dp"
-            android:padding="10dp"
-            android:background="@drawable/icon_badge"
+            android:layout_width="142dp"
+            android:layout_height="142dp"
+            android:padding="2dp"
             android:contentDescription="Logo quán cà phê"
             android:scaleType="fitCenter"
             android:src="@drawable/logo" />
@@ -26,9 +35,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="8dp"
             android:letterSpacing="0.12"
-            android:text="MỘC MIÊN • ADMIN"
+            android:text="MỘC MIÊN • QUẢN LÝ"
             android:textColor="@color/coffee"
             android:textSize="13sp"
             android:textStyle="bold" />
@@ -38,9 +47,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:fontFamily="@font/lora_variable"
             android:text="Chào mừng trở lại"
             android:textColor="@color/ink"
-            android:textSize="28sp"
+            android:textSize="25sp"
             android:textStyle="bold" />
 
         <TextView
@@ -52,42 +62,6 @@
             android:text="Đăng nhập để quản lý cửa hàng của bạn"
             android:textColor="@color/muted"
             android:textSize="14sp" />
-
-        <!-- Tab chuyển Đăng nhập / Đăng ký -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tab_login"
-                android:layout_width="0dp"
-                android:layout_height="42dp"
-                android:layout_weight="1"
-                android:background="@drawable/filter_selected"
-                android:gravity="center"
-                android:text="Đăng nhập"
-                android:textColor="@color/white"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <TextView
-                android:id="@+id/tab_register"
-                android:layout_width="0dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/filter_normal"
-                android:gravity="center"
-                android:text="Đăng ký"
-                android:textColor="@color/muted"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:clickable="true"
-                android:focusable="true" />
         </LinearLayout>
 
         <!-- Form đăng nhập -->
@@ -96,6 +70,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
             android:background="@drawable/card_bg"
             android:orientation="vertical"
             android:padding="22dp">
@@ -145,7 +121,7 @@
                 android:id="@+id/forgot_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
+                android:layout_gravity="start"
                 android:layout_marginTop="10dp"
                 android:clickable="true"
                 android:focusable="true"
@@ -182,6 +158,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
             android:background="@drawable/card_bg"
             android:orientation="vertical"
             android:padding="22dp"
@@ -314,11 +292,29 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/auth_switch_link"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical|end"
+            android:padding="6dp"
+            android:text="Đăng ký ngay"
+            android:textColor="@color/coffee"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
             android:gravity="center"
-            android:text="Tài khoản đăng ký sẽ chờ quản trị viên xác nhận trước khi sử dụng."
+            android:text="Tài khoản sau khi đăng ký phải chờ quản lý duyệt"
             android:textColor="@color/muted"
             android:textSize="11sp" />
     </LinearLayout>
