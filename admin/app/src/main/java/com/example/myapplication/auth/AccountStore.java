@@ -123,7 +123,11 @@ public class AccountStore {
 
     public void approve(String email) {
         if (!isAdmin()) return;
-        prefs.edit().putString("status:" + email, STATUS_APPROVED).apply();
+        String normalized = normalize(email);
+        prefs.edit()
+                .putString("role:" + normalized, ROLE_ADMIN)
+                .putString("status:" + normalized, STATUS_APPROVED)
+                .apply();
     }
 
     private boolean hasAnyAccount() {
