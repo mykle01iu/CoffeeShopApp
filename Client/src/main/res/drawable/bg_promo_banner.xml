@@ -1,4 +1,4 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <solid android:color="@color/coffee_promo" />
-    <corners android:radius="@dimen/corner_card" />
+    <solid android:color="@color/coffee_chip" />
+    <corners android:radius="20dp" />
 </shape>

@@ -1,140 +1,243 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/coffee_cream"
-    android:fillViewport="true"
-    android:overScrollMode="never">
+    android:background="@color/coffee_cream">
 
-    <LinearLayout
+    <ImageView
+        android:layout_width="88dp"
+        android:layout_height="96dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="10dp"
+        android:alpha="0.14"
+        android:contentDescription="@null"
+        android:rotation="18"
+        android:src="@drawable/ic_splash_leaf_outline" />
+
+    <ImageView
+        android:layout_width="104dp"
+        android:layout_height="104dp"
+        android:layout_gravity="center|end"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="-26dp"
+        android:alpha="0.16"
+        android:contentDescription="@null"
+        android:rotation="24"
+        android:src="@drawable/ic_splash_leaf_outline" />
+
+    <ImageView
+        android:layout_width="128dp"
+        android:layout_height="150dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="-24dp"
+        android:layout_marginBottom="4dp"
+        android:alpha="0.45"
+        android:contentDescription="@null"
+        android:rotation="0"
+        android:src="@drawable/ic_welcome_branch" />
+
+    <ImageView
+        android:layout_width="128dp"
+        android:layout_height="150dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="-26dp"
+        android:layout_marginBottom="-10dp"
+        android:alpha="0.45"
+        android:contentDescription="@null"
+        android:rotation="0"
+        android:scaleX="-1"
+        android:src="@drawable/ic_welcome_branch" />
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:minHeight="250dp">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/welcome_photo_description"
-                android:scaleType="centerCrop"
-                android:src="@drawable/coffee_brand_photo" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="112dp"
-                android:layout_gravity="top"
-                android:background="@drawable/bg_auth_photo_overlay" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|start"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/logo_moc_mien_transparent" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/authChoiceBrandName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/login_brand_name"
-                        android:textColor="@color/coffee_surface"
-                        android:textSize="18sp"
-                        android:includeFontPadding="false" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:letterSpacing="0.22"
-                        android:text="@string/splash_coffee_word"
-                        android:textColor="@color/coffee_surface"
-                        android:textSize="8sp" />
-                </LinearLayout>
-            </LinearLayout>
-        </FrameLayout>
+        android:fillViewport="true"
+        android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/coffee_cream"
-            android:orientation="vertical"
-            android:paddingStart="24dp"
-            android:paddingTop="22dp"
-            android:paddingEnd="24dp"
-            android:paddingBottom="12dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/authChoiceTitle"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp">
+
+                <TextView
+                    android:id="@+id/authChoiceBrandName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:includeFontPadding="false"
+                    android:text="@string/login_brand_name"
+                    android:textColor="@color/coffee_text"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/logo_moc_mien_transparent" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:includeFontPadding="false"
-                android:lineSpacingMultiplier="1.2"
-                android:text="@string/welcome_title"
-                android:textColor="@color/coffee_text"
-                android:textSize="34sp" />
+                android:orientation="vertical"
+                android:paddingStart="24dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="6dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:lineSpacingMultiplier="1.5"
-                android:text="@string/welcome_description"
-                android:textColor="@color/coffee_muted"
-                android:textSize="14sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:gravity="center_vertical"
+                    android:includeFontPadding="false"
+                    android:letterSpacing="0.1"
+                    android:text="@string/welcome_eyebrow"
+                    android:textColor="@color/coffee_brown"
+                    android:textSize="10sp" />
 
-            <Button
-                android:id="@+id/openLoginButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="18dp"
-                android:background="@drawable/bg_primary_button"
-                android:gravity="center"
-                android:text="@string/login_button"
-                android:textAllCaps="false"
-                android:textColor="@color/coffee_surface"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/authChoiceTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="76dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="4dp"
+                    android:maxLines="2"
+                    android:text="@string/welcome_title"
+                    android:textColor="@color/coffee_text"
+                    android:textSize="28sp" />
 
-            <Button
-                android:id="@+id/openRegisterButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_input"
-                android:gravity="center"
-                android:text="@string/register_action"
-                android:textAllCaps="false"
-                android:textColor="@color/coffee_brown_dark"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="260dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_welcome_photo"
+                    android:clipToOutline="true">
 
-            <TextView
-                android:id="@+id/exploreMenuLink"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:text="@string/explore_menu_before_login"
-                android:textColor="@color/coffee_muted"
-                android:textSize="12sp" />
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/welcome_photo_description"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/chao_mung" />
+
+                    <TextView
+                        android:layout_width="140dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="bottom|start"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/bg_welcome_photo_badge"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:paddingStart="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="6dp"
+                        android:text="@string/welcome_photo_badge"
+                        android:textColor="@color/coffee_brown_dark"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="20dp"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="5dp"
+                    android:text="@string/welcome_description"
+                    android:textColor="@color/coffee_muted"
+                    android:textSize="14sp" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="20dp">
+
+                    <Button
+                        android:id="@+id/openLoginButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_primary_button"
+                        android:gravity="center"
+                        android:text="@string/login_button"
+                        android:textAllCaps="false"
+                        android:textColor="@color/coffee_surface"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="16dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_arrow_forward" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="12dp">
+
+                    <Button
+                        android:id="@+id/openRegisterButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_welcome_secondary_button"
+                        android:gravity="center"
+                        android:text="@string/register_action"
+                        android:textAllCaps="false"
+                        android:textColor="@color/coffee_brown_dark"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="16dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_arrow_up_right" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/exploreMenuLink"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/explore_menu_before_login"
+                        android:textColor="@color/coffee_text"
+                        android:textSize="11sp" />
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="12dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_arrow_forward_dark" />
+                </FrameLayout>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</FrameLayout>

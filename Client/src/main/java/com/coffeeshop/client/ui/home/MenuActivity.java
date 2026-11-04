@@ -69,9 +69,9 @@ public class MenuActivity extends Activity {
 
     private void createCategories() {
         LinearLayout container = findViewById(R.id.menuCategoryContainer);
-        String[] keys = {"all", "coffee", "tea", "smoothie", "snack"};
+        String[] keys = {"all", "coffee", "tea", "smoothie", "latte", "snack"};
         int[] labels = {R.string.category_all, R.string.category_coffee, R.string.category_tea,
-                R.string.category_smoothie, R.string.category_snacks};
+                R.string.category_smoothie, R.string.category_latte, R.string.category_snacks};
         for (int i = 0; i < keys.length; i++) {
             TextView chip = new TextView(this);
             chip.setText(labels[i]);
@@ -151,7 +151,7 @@ public class MenuActivity extends Activity {
 
     private void bindCard(LinearLayout row, DrinkProduct product, int width) {
         View card = LayoutInflater.from(this).inflate(R.layout.item_drink, row, false);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, dp(240));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
         if (row.getChildCount() == 0) params.setMarginEnd(dp(12));
         row.addView(card, params);
         ((ImageView) card.findViewById(R.id.drinkImage)).setImageResource(product.imageRes);

@@ -2,6 +2,8 @@ package com.coffeeshop.client.ui.auth;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,9 +22,10 @@ public class AuthChoiceActivity extends Activity {
         FontUtils.applyInter(findViewById(android.R.id.content));
 
         TextView title = findViewById(R.id.authChoiceTitle);
-        title.setTypeface(FontUtils.lora(this, 400));
-        TextView brandName = findViewById(R.id.authChoiceBrandName);
-        brandName.setTypeface(FontUtils.lora(this, 600));
+        Typeface serif = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+                ? Typeface.create(Typeface.create("serif", Typeface.NORMAL), 600, false)
+                : Typeface.create("serif", Typeface.BOLD);
+        title.setTypeface(serif);
 
         Button openLoginButton = findViewById(R.id.openLoginButton);
         openLoginButton.setOnClickListener(view ->

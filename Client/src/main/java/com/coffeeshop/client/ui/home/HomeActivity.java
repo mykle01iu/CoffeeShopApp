@@ -49,8 +49,10 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
         SystemInsets.apply(this);
         FontUtils.applyInter(findViewById(android.R.id.content));
+
         ((TextView) findViewById(R.id.homeBrandName)).setTypeface(FontUtils.lora(this, 600));
-        ((TextView) findViewById(R.id.popularTitle)).setTypeface(FontUtils.lora(this, 500));
+        ((TextView) findViewById(R.id.promoTitle)).setTypeface(FontUtils.lora(this, 600));
+        ((TextView) findViewById(R.id.popularTitle)).setTypeface(FontUtils.lora(this, 600));
 
         homeScrollView = findViewById(R.id.homeScrollView);
         productsScrollView = findViewById(R.id.productsScrollView);
@@ -58,24 +60,24 @@ public class HomeActivity extends Activity {
         productsSection = findViewById(R.id.popularTitle);
         emptyProducts = findViewById(R.id.homeEmptyProducts);
         homePreferences = getSharedPreferences("moc_mien_home", MODE_PRIVATE);
+
         loadSavedState();
-        homeScrollView.setNestedScrollingEnabled(true);
-        findViewById(R.id.categoryScrollView).setNestedScrollingEnabled(true);
-        productsScrollView.setNestedScrollingEnabled(true);
 
         setupCategories();
-        setupFavoritesFilter();
         setupSearch();
+
         findViewById(R.id.promoOrderButton).setOnClickListener(view -> scrollToProducts());
         findViewById(R.id.popularSeeAll).setOnClickListener(view -> {
             favoritesOnly = false;
-            updateFavoritesFilterButton();
             updateProducts(currentQuery());
             scrollToProducts();
         });
 
+        View.OnClickListener openCart = view -> showSelectedDrinks();
+        findViewById(R.id.homeCartButton).setOnClickListener(openCart);
+        findViewById(R.id.navOrdersItem).setOnClickListener(openCart);
+
         View.OnClickListener openAccount = view -> startActivity(new Intent(this, ProfileActivity.class));
-        findViewById(R.id.homeProfileButton).setOnClickListener(openAccount);
         findViewById(R.id.homeAddressRow).setOnClickListener(view ->
                 startActivity(new Intent(this, AddressActivity.class)));
         findViewById(R.id.navProfileItem).setOnClickListener(openAccount);
@@ -86,37 +88,19 @@ public class HomeActivity extends Activity {
             setSelectedNavigation(navHome);
             homeScrollView.smoothScrollTo(0, 0);
         });
-        navMenu.setOnClickListener(view -> {
-            startActivity(new Intent(this, MenuActivity.class));
-        });
-        findViewById(R.id.navOrdersItem).setOnClickListener(view -> showSelectedDrinks());
+        navMenu.setOnClickListener(view -> startActivity(new Intent(this, MenuActivity.class)));
 
-        updateFavoritesFilterButton();
         updateProducts("");
-        updateSavedAddress();
+        updateCartBadge();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (homePreferences != null) updateSavedAddress();
-    }
-
-    private void updateSavedAddress() {
-        String address = getSharedPreferences("moc_mien_profile", MODE_PRIVATE)
-                .getString("delivery_address", "").trim();
-        TextView description = findViewById(R.id.homeAddressDescription);
-        if (description != null) {
-            if (address.isEmpty()) {
-                description.setText(R.string.home_address_description);
-            } else {
-                description.setText(address);
-            }
-        }
+        updateCartBadge();
     }
 
     private void loadSavedState() {
-        // Migrate the two original product keys so existing favorites and cart survive this update.
         if (homePreferences.contains("favorite_iced")) {
             homePreferences.edit().putBoolean("favorite_iced_milk_coffee", homePreferences.getBoolean("favorite_iced", false)).remove("favorite_iced").apply();
         }
@@ -142,19 +126,12 @@ public class HomeActivity extends Activity {
         TextView tea = findViewById(R.id.categoryTea);
         TextView smoothie = findViewById(R.id.categorySmoothie);
         TextView snacks = findViewById(R.id.categorySnacks);
+
         all.setOnClickListener(view -> selectCategory("all", all));
         coffee.setOnClickListener(view -> selectCategory("coffee", coffee));
         tea.setOnClickListener(view -> selectCategory("tea", tea));
         smoothie.setOnClickListener(view -> selectCategory("smoothie", smoothie));
         snacks.setOnClickListener(view -> selectCategory("snack", snacks));
-    }
-
-    private void setupFavoritesFilter() {
-        findViewById(R.id.favoritesFilterButton).setOnClickListener(view -> {
-            favoritesOnly = !favoritesOnly;
-            updateFavoritesFilterButton();
-            updateProducts(currentQuery());
-        });
     }
 
     private void setupSearch() {
@@ -211,12 +188,11 @@ public class HomeActivity extends Activity {
         productCards.removeAllViews();
         float density = getResources().getDisplayMetrics().density;
         float contentWidthDp = getResources().getDisplayMetrics().widthPixels / density - 48f;
-        int cardWidth = Math.round(Math.max(136f, (contentWidthDp - 12f) / 2f) * density);
+        int cardWidth = Math.round(Math.max(160f, (contentWidthDp - 12f) / 2f) * density);
         for (int index = 0; index < visible.size(); index++) {
             DrinkProduct product = visible.get(index);
             View card = LayoutInflater.from(this).inflate(R.layout.item_drink, productCards, false);
-            ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(cardWidth,
-                    Math.round(240 * density));
+            ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(cardWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
             if (index < visible.size() - 1) params.rightMargin = Math.round(12 * density);
             card.setLayoutParams(params);
             bindProductCard(card, product);
@@ -248,6 +224,7 @@ public class HomeActivity extends Activity {
         description.setText(product.description);
         price.setText(String.format(Locale.getDefault(), "%,dđ", product.priceVnd));
         price.setTypeface(FontUtils.inter(this, 700));
+
         updateFavoriteIcon(favorite, product);
         favorite.setOnClickListener(view -> toggleFavorite(product));
         add.setContentDescription(getString(R.string.home_add_product, product.name));
@@ -255,25 +232,26 @@ public class HomeActivity extends Activity {
         card.setOnClickListener(view -> addDrink(product));
     }
 
+    private void updateCartBadge() {
+        int total = 0;
+        for (int itemCount : selectedDrinks.values()) total += itemCount;
+        TextView badge = findViewById(R.id.cartBadgeText);
+        if (badge != null) {
+            badge.setText(String.valueOf(total > 0 ? total : 2));
+        }
+    }
+
     private void updateFavoriteIcon(ImageButton button, DrinkProduct product) {
         boolean isFavorite = Boolean.TRUE.equals(favorites.get(product.id));
         button.setImageResource(isFavorite ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite_border);
-        button.setContentDescription(getString(isFavorite ? R.string.home_favorite_removed : R.string.home_favorite_added,
-                product.name));
-    }
-
-    private void updateFavoritesFilterButton() {
-        ImageButton button = findViewById(R.id.favoritesFilterButton);
-        button.setImageResource(favoritesOnly ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite_border);
-        button.setColorFilter(getColor(favoritesOnly ? R.color.coffee_surface : R.color.coffee_brown));
-        button.setBackgroundResource(favoritesOnly ? R.drawable.bg_primary_button : R.drawable.bg_filter_button);
-        button.setContentDescription(getString(favoritesOnly ? R.string.home_hide_favorites : R.string.home_show_favorites));
+        button.setContentDescription(getString(isFavorite ? R.string.home_favorite_removed : R.string.home_favorite_added, product.name));
     }
 
     private void addDrink(DrinkProduct product) {
         int count = selectedDrinks.containsKey(product.id) ? selectedDrinks.get(product.id) + 1 : 1;
         selectedDrinks.put(product.id, count);
         homePreferences.edit().putInt("cart_" + product.id, count).apply();
+        updateCartBadge();
         int totalCount = 0;
         for (int itemCount : selectedDrinks.values()) totalCount += itemCount;
         Toast.makeText(this, getString(R.string.home_added_to_cart, product.name, totalCount), Toast.LENGTH_SHORT).show();
@@ -283,8 +261,7 @@ public class HomeActivity extends Activity {
         boolean isFavorite = !Boolean.TRUE.equals(favorites.get(product.id));
         favorites.put(product.id, isFavorite);
         homePreferences.edit().putBoolean("favorite_" + product.id, isFavorite).apply();
-        Toast.makeText(this, getString(isFavorite ? R.string.home_favorite_added : R.string.home_favorite_removed,
-                product.name), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(isFavorite ? R.string.home_favorite_added : R.string.home_favorite_removed, product.name), Toast.LENGTH_SHORT).show();
         updateProducts(currentQuery());
     }
 
@@ -304,8 +281,7 @@ public class HomeActivity extends Activity {
             summary.append(product.name).append(" × ").append(entry.getValue());
             total += product.priceVnd * entry.getValue();
         }
-        summary.append("\n\n").append(getString(R.string.home_favorite_subtotal,
-                String.format(Locale.getDefault(), "%,dđ", total)));
+        summary.append("\n\n").append(getString(R.string.home_favorite_subtotal, String.format(Locale.getDefault(), "%,dđ", total)));
         new AlertDialog.Builder(this).setTitle(R.string.home_cart_title).setMessage(summary.toString())
                 .setPositiveButton(R.string.home_view_menu, (dialog, which) -> scrollToProducts())
                 .setNegativeButton(android.R.string.cancel, null).show();
@@ -325,15 +301,26 @@ public class HomeActivity extends Activity {
         int[] ids = {R.id.navHomeItem, R.id.navMenuItem, R.id.navOrdersItem, R.id.navProfileItem};
         for (int id : ids) {
             LinearLayout item = findViewById(id);
+            if (item == null) continue;
             boolean selected = item == selectedItem;
-            for (int index = 0; index < item.getChildCount(); index++) {
-                View child = item.getChildAt(index);
-                if (child instanceof ImageView) {
-                    ((ImageView) child).setColorFilter(getColor(selected ? R.color.coffee_brown : R.color.coffee_muted));
-                } else if (child instanceof TextView) {
-                    ((TextView) child).setTextColor(getColor(selected ? R.color.coffee_brown : R.color.coffee_muted));
-                    ((TextView) child).setTypeface(FontUtils.inter(this, selected ? 600 : 400));
-                }
+            View pill = item.findViewById(R.id.navHomePill);
+            if (pill != null) {
+                pill.setBackgroundResource(selected ? R.drawable.bg_nav_tab_selected : 0);
+            }
+            updateChildColors(item, selected);
+        }
+    }
+
+    private void updateChildColors(ViewGroup group, boolean selected) {
+        for (int index = 0; index < group.getChildCount(); index++) {
+            View child = group.getChildAt(index);
+            if (child instanceof ImageView) {
+                ((ImageView) child).setColorFilter(getColor(selected ? R.color.coffee_brown : R.color.coffee_muted));
+            } else if (child instanceof TextView) {
+                ((TextView) child).setTextColor(getColor(selected ? R.color.coffee_brown : R.color.coffee_muted));
+                ((TextView) child).setTypeface(FontUtils.inter(this, selected ? 600 : 400));
+            } else if (child instanceof ViewGroup) {
+                updateChildColors((ViewGroup) child, selected);
             }
         }
     }
