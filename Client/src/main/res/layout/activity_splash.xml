@@ -1,108 +1,196 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/coffee_cream"
-    android:fillViewport="true"
-    android:overScrollMode="never">
+    android:clipChildren="false">
 
-    <LinearLayout
+    <!-- Quiet botanical line art around the edges, kept behind the brand content. -->
+    <ImageView
+        android:layout_width="92dp"
+        android:layout_height="92dp"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:alpha="0.16"
+        android:contentDescription="@null"
+        android:rotation="-24"
+        android:src="@drawable/ic_splash_leaf_outline" />
+
+    <ImageView
+        android:layout_width="92dp"
+        android:layout_height="92dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="8dp"
+        android:alpha="0.16"
+        android:contentDescription="@null"
+        android:rotation="28"
+        android:scaleX="-1"
+        android:src="@drawable/ic_splash_leaf_outline" />
+
+    <ImageView
+        android:layout_width="78dp"
+        android:layout_height="78dp"
+        android:layout_gravity="center|end"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="-14dp"
+        android:alpha="0.14"
+        android:contentDescription="@null"
+        android:rotation="-10"
+        android:src="@drawable/ic_splash_leaf_outline" />
+
+    <ImageView
+        android:layout_width="92dp"
+        android:layout_height="92dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="-14dp"
+        android:layout_marginBottom="12dp"
+        android:alpha="0.14"
+        android:contentDescription="@null"
+        android:rotation="12"
+        android:src="@drawable/ic_splash_leaf_outline" />
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingStart="24dp"
-        android:paddingTop="28dp"
-        android:paddingEnd="24dp"
-        android:paddingBottom="18dp">
+        android:fillViewport="true"
+        android:overScrollMode="never">
 
         <LinearLayout
+            android:id="@+id/splashContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="80dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="24dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:gravity="center"
-                android:letterSpacing="0.16"
-                android:text="@string/splash_eyebrow"
-                android:textColor="@color/coffee_brown"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <ImageView
+            <FrameLayout
                 android:id="@+id/splashLogo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:contentDescription="@string/app_name"
-                android:scaleType="fitCenter"
-                android:src="@drawable/logo_moc_mien_transparent" />
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:contentDescription="@string/app_name">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_marginTop="18dp"
+                    android:contentDescription="@null"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_splash_cup" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="12dp"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="MỘC MIÊN"
+                    android:textColor="@color/coffee_text"
+                    android:textSize="8sp"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/logo_moc_mien_transparent" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/splashBrandName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="24dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:lineSpacingMultiplier="1.2"
                 android:text="@string/splash_brand_name"
                 android:textColor="@color/coffee_text"
+                android:fontFamily="serif"
+                android:textStyle="bold"
                 android:textSize="38sp" />
 
             <TextView
+                android:id="@+id/splashCoffeeWord"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="24dp"
                 android:gravity="center"
                 android:letterSpacing="0.32"
                 android:text="@string/splash_coffee_word"
-                android:textColor="@color/coffee_muted"
-                android:textSize="10sp" />
-
-            <View
-                android:layout_width="24dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/coffee_accent" />
+                android:textColor="@color/coffee_text"
+                android:textSize="12sp" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:id="@+id/splashDescription"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginTop="24dp"
                 android:gravity="center"
-                android:lineSpacingMultiplier="1.5"
-                android:text="@string/splash_tagline"
+                android:includeFontPadding="false"
+                android:text="@string/splash_motto"
                 android:textColor="@color/coffee_muted"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
+
+            <FrameLayout
+                android:layout_width="284dp"
+                android:layout_height="336dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_splash_arch"
+                android:clipToOutline="true">
+
+                <ImageView
+                    android:id="@+id/splashCoffeePhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/splash_coffee_photo_description"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/slash" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/splashProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_marginTop="24dp"
+                android:contentDescription="@string/splash_loading_description"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/splashProgressActive"
+                    android:layout_width="24dp"
+                    android:layout_height="6dp"
+                    android:background="@drawable/bg_splash_progress_active" />
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_splash_progress_dot" />
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_splash_progress_dot" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/splashTagline"
+                android:layout_width="match_parent"
+                android:layout_height="18dp"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="@string/splash_footer_reference"
+                android:textColor="@color/coffee_muted"
+                android:textSize="10sp"
+                android:letterSpacing="0.08" />
         </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <ImageView
-            android:id="@+id/splashCoffeePhoto"
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/bg_product_card"
-            android:clipToOutline="true"
-            android:contentDescription="@string/splash_coffee_photo_description"
-            android:scaleType="centerCrop"
-            android:src="@drawable/coffee_brand_photo" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:letterSpacing="0.08"
-            android:text="@string/splash_footer"
-            android:textColor="@color/coffee_brown"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</FrameLayout>

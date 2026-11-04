@@ -1,15 +1,16 @@
 package com.coffeeshop.client.ui.splash;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.os.SystemClock;
+import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.coffeeshop.client.R;
 import com.coffeeshop.client.ui.auth.AuthChoiceActivity;
@@ -17,8 +18,12 @@ import com.coffeeshop.client.ui.common.FontUtils;
 import com.coffeeshop.client.ui.common.SystemInsets;
 
 public class SplashActivity extends Activity {
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    private final Runnable openLogin = () -> {
+    private static final long MIN_SPLASH_MILLIS = 2100L;
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private long splashStartTime;
+    private boolean initializationComplete;
+    private final Runnable openWelcome = () -> {
+        if (isFinishing() || isDestroyed()) return;
         startActivity(new Intent(this, AuthChoiceActivity.class));
         finish();
     };
@@ -26,45 +31,48 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        splashStartTime = SystemClock.uptimeMillis();
         setContentView(R.layout.activity_splash);
         SystemInsets.apply(this);
         FontUtils.applyInter(findViewById(android.R.id.content));
 
-        TextView brandName = findViewById(R.id.splashBrandName);
-        brandName.setTypeface(FontUtils.lora(this, 500));
+        android.widget.TextView brandName = findViewById(R.id.splashBrandName);
+        Typeface serif = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+                ? Typeface.create(Typeface.create("serif", Typeface.NORMAL), 600, false)
+                : Typeface.create("serif", Typeface.BOLD);
+        brandName.setTypeface(serif);
 
-        ImageView coffeePhoto = findViewById(R.id.splashCoffeePhoto);
-        AnimatorSet photoMotion = new AnimatorSet();
-        photoMotion.playTogether(
-                ObjectAnimator.ofFloat(coffeePhoto, "scaleX", 1f, 1.04f),
-                ObjectAnimator.ofFloat(coffeePhoto, "scaleY", 1f, 1.04f)
-        );
-        photoMotion.setDuration(2000);
-        photoMotion.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
-        photoMotion.start();
+        View splashContent = findViewById(R.id.splashContent);
+        ViewTreeObserver observer = splashContent.getViewTreeObserver();
+        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                ViewTreeObserver currentObserver = splashContent.getViewTreeObserver();
+                if (currentObserver.isAlive()) {
+                    currentObserver.removeOnPreDrawListener(this);
+                }
+                initializationComplete = true;
+                scheduleWelcomeWhenReady();
+                return true;
+            }
+        });
+    }
 
-        ImageView logo = findViewById(R.id.splashLogo);
-        logo.setAlpha(0f);
-        logo.setScaleX(0.82f);
-        logo.setScaleY(0.82f);
-
-        AnimatorSet entrance = new AnimatorSet();
-        entrance.playTogether(
-                ObjectAnimator.ofFloat(logo, "rotation", -18f, 342f),
-                ObjectAnimator.ofFloat(logo, "scaleX", 0.82f, 1f),
-                ObjectAnimator.ofFloat(logo, "scaleY", 0.82f, 1f),
-                ObjectAnimator.ofFloat(logo, "alpha", 0f, 1f)
-        );
-        entrance.setDuration(1200);
-        entrance.setInterpolator(new DecelerateInterpolator(1.5f));
-        entrance.start();
-
-        handler.postDelayed(openLogin, 2000);
+    private void scheduleWelcomeWhenReady() {
+        if (!initializationComplete || isFinishing() || isDestroyed()) return;
+        long minimumDuration = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                && !ValueAnimator.areAnimatorsEnabled() ? 0L : MIN_SPLASH_MILLIS;
+        long remaining = minimumDuration - (SystemClock.uptimeMillis() - splashStartTime);
+        if (remaining <= 0) {
+            openWelcome.run();
+        } else {
+            mainHandler.postDelayed(openWelcome, remaining);
+        }
     }
 
     @Override
     protected void onDestroy() {
-        handler.removeCallbacks(openLogin);
+        mainHandler.removeCallbacks(openWelcome);
         super.onDestroy();
     }
 }

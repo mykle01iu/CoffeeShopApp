@@ -1,11 +1,17 @@
 <resources>
+    <string name="welcome_eyebrow">CH&#192;O M&#7914;NG B&#7840;N &#272;&#7870;N V&#7898;I</string>
+    <string name="welcome_photo_badge">M&#7896;C MI&#202;N &#8226; COFFEE</string>
+    <string name="splash_motto">Chậm một nhịp. Đậm một hương.</string>
+    <string name="splash_footer_reference">CÀ PHÊ MỘC • KHOẢNH KHẮC MIÊN MAN</string>
     <string name="app_name">Mộc Miên Coffee</string>
     <string name="splash_tagline">Chậm một nhịp. Đậm một vị.</string>
     <string name="splash_brand_name">Mộc Miên</string>
     <string name="splash_eyebrow">ĐẬM VỊ TỰ NHIÊN</string>
+    <string name="splash_description">Cà phê Việt, chắt chiu từng giọt.</string>
     <string name="splash_footer">CÀ PHÊ VIỆT • CHĂM CHÚT TỪNG GIỌT</string>
     <string name="splash_coffee_photo_description">Ly cà phê sữa trong không gian Mộc Miên</string>
     <string name="splash_coffee_word">COFFEE</string>
+    <string name="splash_loading_description">Đang chuẩn bị ứng dụng</string>
     <string name="welcome_photo_description">Cà phê Mộc Miên trong không gian quán</string>
     <string name="welcome_title">Một chút an yên,\nmột ly Mộc Miên.</string>
     <string name="welcome_description">Cà phê chăm chút từ hạt đến ly. Đặt món bạn yêu, để Mộc Miên mang đến.</string>
@@ -14,8 +20,9 @@
     <string name="login_welcome_line">Chào mừng bạn đến với</string>
     <string name="login_brand_name">Mộc Miên Coffee</string>
     <string name="login_greeting">Chào bạn!</string>
-    <string name="login_form_title">Hẹn bạn một ly cà phê.</string>
-    <string name="login_form_subtitle">Đăng nhập để tiếp tục câu chuyện của bạn.</string>
+    <string name="login_form_title">Mừng bạn\ntrở lại.</string>
+    <string name="login_form_subtitle">Đăng nhập để gọi món, nhận ưu đãi và tích điểm.</string>
+    <string name="password_reset_unavailable">Tính năng quên mật khẩu chưa được cấu hình.</string>
     <string name="continue_button">Tiếp tục</string>
     <string name="login_subtitle">Đăng nhập để tiếp tục khám phá Mộc Miên Coffee</string>
     <string name="email_label">Địa chỉ email</string>
@@ -53,6 +60,7 @@
     <string name="category_coffee">Cà phê</string>
     <string name="category_tea">Trà</string>
     <string name="category_smoothie">Đá xay</string>
+    <string name="category_latte">Latte</string>
     <string name="popular_title">Được yêu thích</string>
     <string name="see_all">Xem tất cả</string>
     <string name="drink_iced_coffee">Cà phê sữa đá</string>
@@ -101,7 +109,7 @@
     <string name="home_add_product">Thêm %1$s vào giỏ</string>
     <string name="menu_title">Thực đơn</string>
     <string name="menu_result_count">%1$d món trong thực đơn</string>
-    <string name="category_snacks">Ăn vặt</string>
+    <string name="category_snacks">Bánh ngọt</string>
     <string name="menu_subtitle">Thức uống và món ăn nhẹ cho ngày thêm vui</string>
     <string name="profile_title">Tài khoản của bạn</string>
     <string name="profile_subtitle">Đăng nhập để quản lý thông tin và theo dõi đơn hàng.</string>
