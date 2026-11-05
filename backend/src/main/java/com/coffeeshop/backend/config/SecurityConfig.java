@@ -1,3 +1,4 @@
+
 package com.coffeeshop.backend.config;
 
 import com.coffeeshop.backend.security.JwtAuthFilter;
@@ -31,8 +32,10 @@ public class SecurityConfig {
             throws Exception {
 
         http
+                // REST API su dung JWT, khong dung CSRF token
                 .csrf(csrf -> csrf.disable())
 
+                // Khong luu session tren server
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
@@ -41,50 +44,91 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // Cho phép các request forward/error nội bộ của Spring
+                        // Cho phep request noi bo cua Spring
                         .dispatcherTypeMatchers(
                                 DispatcherType.ERROR,
                                 DispatcherType.FORWARD
                         ).permitAll()
 
-                        // API công khai
+                        // ==============================
+                        // 1. PUBLIC API
+                        // ==============================
+
                         .requestMatchers(
                                 "/api/health",
                                 "/api/auth/**"
                         ).permitAll()
 
-                        // Ai cũng được xem sản phẩm
+                        // ==============================
+                        // 2. PRODUCT API
+                        // ==============================
+
+                        // Tat ca duoc xem san pham
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/products",
                                 "/api/products/**"
                         ).permitAll()
 
-                        // Chỉ ADMIN được thêm sản phẩm
+                        // Chi ADMIN duoc them san pham
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/products",
                                 "/api/products/**"
                         ).hasRole("ADMIN")
 
-                        // Chỉ ADMIN được sửa sản phẩm
+                        // Chi ADMIN duoc sua san pham
                         .requestMatchers(
                                 HttpMethod.PUT,
                                 "/api/products",
                                 "/api/products/**"
                         ).hasRole("ADMIN")
 
-                        // Chỉ ADMIN được xóa sản phẩm
+                        // Chi ADMIN duoc xoa san pham
                         .requestMatchers(
                                 HttpMethod.DELETE,
                                 "/api/products",
                                 "/api/products/**"
                         ).hasRole("ADMIN")
 
-                        // API còn lại phải đăng nhập
+                        // ==============================
+                        // 3. CATEGORY API
+                        // ==============================
+
+                        // Tat ca duoc xem danh muc
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/categories",
+                                "/api/categories/**"
+                        ).permitAll()
+
+                        // Chi ADMIN duoc them danh muc
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/categories"
+                        ).hasRole("ADMIN")
+
+                        // Chi ADMIN duoc sua danh muc
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/categories/**"
+                        ).hasRole("ADMIN")
+
+                        // Chi ADMIN duoc xoa danh muc
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/api/categories/**"
+                        ).hasRole("ADMIN")
+
+                        // ==============================
+                        // 4. OTHER API
+                        // ==============================
+
+                        // API con lai bat buoc dang nhap
                         .anyRequest().authenticated()
                 )
 
+                // Kiem tra JWT truoc filter dang nhap
                 .addFilterBefore(
                         jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class
