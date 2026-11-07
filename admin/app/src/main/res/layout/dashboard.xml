@@ -77,10 +77,6 @@
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Mỗi đơn" android:textColor="@color/muted" android:textSize="11sp" />
             </LinearLayout>
         </LinearLayout>
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:background="@drawable/card_bg" android:gravity="center_vertical" android:orientation="horizontal" android:padding="13dp">
-            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="SẢN PHẨM ĐANG KINH DOANH" android:textColor="@color/muted" android:textSize="10sp" android:textStyle="bold" />
-            <TextView android:id="@+id/product_total" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="24" android:textColor="@color/ink" android:textSize="20sp" android:textStyle="bold" />
-        </LinearLayout>
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:text="Doanh thu 7 ngày gần nhất" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:background="@drawable/card_bg" android:orientation="vertical" android:padding="16dp">
@@ -149,9 +145,9 @@
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:text="Quản lý nhanh" android:textColor="@color/ink" android:textSize="17sp" android:textStyle="bold" />
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal">
-            <LinearLayout android:id="@+id/open_products" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginEnd="6dp" android:layout_weight="1" android:background="@drawable/card_bg" android:clickable="true" android:focusable="true" android:gravity="center_vertical" android:orientation="vertical" android:padding="14dp">
-                <TextView android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/icon_badge" android:gravity="center" android:text="☕" android:textSize="20sp" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="9dp" android:text="Sản phẩm" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" />
+            <LinearLayout android:id="@+id/open_categories" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginEnd="6dp" android:layout_weight="1" android:background="@drawable/card_bg" android:clickable="true" android:focusable="true" android:gravity="center_vertical" android:orientation="vertical" android:padding="14dp">
+                <TextView android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/icon_badge" android:gravity="center" android:text="☕" android:textColor="@color/coffee" android:textSize="20sp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="9dp" android:text="Danh mục sản phẩm" android:textColor="@color/ink" android:textSize="13sp" android:textStyle="bold" />
             </LinearLayout>
             <LinearLayout android:id="@+id/open_orders_bottom" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:layout_weight="1" android:background="@drawable/card_bg" android:clickable="true" android:focusable="true" android:gravity="center_vertical" android:orientation="vertical" android:padding="14dp">
                 <TextView android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/icon_badge" android:gravity="center" android:text="▤" android:textColor="@color/coffee" android:textSize="20sp" />

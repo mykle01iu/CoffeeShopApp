@@ -11,7 +11,6 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.example.myapplication.R;
 import com.example.myapplication.auth.AccountStore;
-import com.example.myapplication.data.ProductRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,14 +26,11 @@ public class DashboardScreen {
     private final Activity activity;
     private final Navigator navigator;
     private final AccountStore accounts;
-    private final ProductRepository products;
-
     public DashboardScreen(Activity activity, Navigator navigator,
-                           AccountStore accounts, ProductRepository products) {
+                           AccountStore accounts) {
         this.activity = activity;
         this.navigator = navigator;
         this.accounts = accounts;
-        this.products = products;
     }
 
     public void show() {
@@ -43,8 +39,6 @@ public class DashboardScreen {
         TextView date = activity.findViewById(R.id.dashboard_date);
         date.setText(new SimpleDateFormat("EEEE, dd/MM/yyyy", new Locale("vi", "VN")).format(new Date()));
 
-        TextView productTotal = activity.findViewById(R.id.product_total);
-        productTotal.setText(String.valueOf(products.size()));
 
         populateLowStockAlerts();
 
@@ -53,11 +47,12 @@ public class DashboardScreen {
         approvalsButton.setOnClickListener(v -> new AccountApprovalDialog(activity, accounts).show());
 
         activity.findViewById(R.id.revenue_today_card).setOnClickListener(v -> navigator.showRevenue());
-        activity.findViewById(R.id.logout_button).setOnClickListener(v -> navigator.logout());        activity.findViewById(R.id.open_products).setOnClickListener(v -> navigator.showProducts());
+        activity.findViewById(R.id.logout_button).setOnClickListener(v -> navigator.logout());
         activity.findViewById(R.id.open_orders).setOnClickListener(v -> comingSoon());
         activity.findViewById(R.id.open_staff).setOnClickListener(v -> comingSoon());
         activity.findViewById(R.id.open_reports).setOnClickListener(v -> comingSoon());
         activity.findViewById(R.id.open_inventory).setOnClickListener(v -> showInventoryDetails());
+        activity.findViewById(R.id.open_categories).setOnClickListener(v -> navigator.showCategories());
     }
 
     private void populateLowStockAlerts() {

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.myapplication.data.ProductRepository;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -35,11 +34,4 @@ public final class UiUtils {
         return NumberFormat.getNumberInstance(new Locale("vi", "VN")).format(price) + " ₫";
     }
 
-    public static String categoryIcon(String category) {
-        switch (category) {
-            case ProductRepository.CAT_COFFEE: return "☕";
-            case ProductRepository.CAT_TEA: return "🍵";
-            default: return "🥐";
-        }
-    }
 }
