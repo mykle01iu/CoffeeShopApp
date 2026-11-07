@@ -10,18 +10,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.auth.AccountStore;
 import com.example.myapplication.auth.SessionManager;
-import com.example.myapplication.data.ProductRepository;
+import com.example.myapplication.data.CategoryRepository;
 import com.example.myapplication.ui.DashboardScreen;
 import com.example.myapplication.ui.LoginScreen;
+import com.example.myapplication.ui.CategoryScreen;
 import com.example.myapplication.ui.Navigator;
-import com.example.myapplication.ui.ProductsScreen;
 import com.example.myapplication.ui.RevenueScreen;
 
 public class MainActivity extends AppCompatActivity implements Navigator {
 
     private SessionManager session;
     private AccountStore accounts;
-    private ProductRepository products;
+    private CategoryRepository categories;
     private OnBackPressedCallback backCallback;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable openLogin;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements Navigator {
         super.onCreate(state);
         session = new SessionManager(this);
         accounts = new AccountStore(this, session);
-        products = new ProductRepository();
+        categories = new CategoryRepository();
 
         backCallback = new OnBackPressedCallback(false) {
             @Override
@@ -82,14 +82,7 @@ public class MainActivity extends AppCompatActivity implements Navigator {
     public void showDashboard() {
         if (!requireLogin()) return;
         backCallback.setEnabled(false);
-        new DashboardScreen(this, this, accounts, products).show();
-    }
-
-    @Override
-    public void showProducts() {
-        if (!requireLogin()) return;
-        backCallback.setEnabled(true);
-        new ProductsScreen(this, this, products).show();
+        new DashboardScreen(this, this, accounts).show();
     }
 
     @Override
@@ -97,6 +90,13 @@ public class MainActivity extends AppCompatActivity implements Navigator {
         if (!requireLogin()) return;
         backCallback.setEnabled(true);
         new RevenueScreen(this, this).show();
+    }
+
+    @Override
+    public void showCategories() {
+        if (!requireLogin()) return;
+        backCallback.setEnabled(true);
+        new CategoryScreen(this, this, categories).show();
     }
 
     // Chặn mọi màn hình nội bộ khi chưa có session
