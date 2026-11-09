@@ -13,18 +13,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.data.CategoryRepository;
+import com.example.myapplication.data.ProductRepository;
 import com.example.myapplication.model.Category;
 
 public class CategoryScreen implements CategoryAdapter.Listener {
     private final Activity activity;
     private final Navigator navigator;
     private final CategoryRepository repository;
+    private final ProductRepository products;
     private CategoryAdapter adapter;
 
-    public CategoryScreen(Activity activity, Navigator navigator, CategoryRepository repository) {
+    public CategoryScreen(Activity activity, Navigator navigator, CategoryRepository repository,
+                          ProductRepository products) {
         this.activity = activity;
         this.navigator = navigator;
         this.repository = repository;
+        this.products = products;
     }
 
     public void show() {
@@ -33,18 +37,16 @@ public class CategoryScreen implements CategoryAdapter.Listener {
         activity.findViewById(R.id.add_category).setOnClickListener(v -> showCategoryForm(null));
         RecyclerView list = activity.findViewById(R.id.categories_list);
         list.setLayoutManager(new LinearLayoutManager(activity));
-        adapter = new CategoryAdapter(this);
+        adapter = new CategoryAdapter(this, products);
         list.setAdapter(adapter);
         refreshList();
     }
 
-    @Override
-    public void onEdit(Category category) {
-        showCategoryForm(category);
-    }
+    @Override public void onOpen(Category category) { navigator.showProducts(category); }
 
-    @Override
-    public void onDelete(Category category) {
+    @Override public void onEdit(Category category) { showCategoryForm(category); }
+
+    @Override public void onDelete(Category category) {
         new AlertDialog.Builder(activity)
                 .setTitle("Xóa danh mục")
                 .setMessage("Bạn có chắc muốn xóa danh mục \"" + category.name + "\" không?")
@@ -53,8 +55,7 @@ public class CategoryScreen implements CategoryAdapter.Listener {
                     repository.delete(category);
                     refreshList();
                     Toast.makeText(activity, "Đã xóa danh mục", Toast.LENGTH_SHORT).show();
-                })
-                .show();
+                }).show();
     }
 
     private void showCategoryForm(Category category) {
@@ -76,14 +77,8 @@ public class CategoryScreen implements CategoryAdapter.Listener {
         dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             String name = nameInput.getText().toString().trim();
             String description = descriptionInput.getText().toString().trim();
-            if (name.isEmpty()) {
-                nameInput.setError("Vui lòng nhập tên danh mục");
-                return;
-            }
-            if (repository.containsName(name, category)) {
-                nameInput.setError("Tên danh mục đã tồn tại");
-                return;
-            }
+            if (name.isEmpty()) { nameInput.setError("Vui lòng nhập tên danh mục"); return; }
+            if (repository.containsName(name, category)) { nameInput.setError("Tên danh mục đã tồn tại"); return; }
             if (editing) repository.update(category, name, description);
             else repository.add(name, description);
             refreshList();
@@ -96,5 +91,7 @@ public class CategoryScreen implements CategoryAdapter.Listener {
         if (adapter != null) adapter.submitList(repository.getAll());
         TextView count = activity.findViewById(R.id.category_count);
         if (count != null) count.setText(repository.getAll().size() + " danh mục");
+        View empty = activity.findViewById(R.id.categories_empty);
+        if (empty != null) empty.setVisibility(repository.getAll().isEmpty() ? View.VISIBLE : View.GONE);
     }
 }

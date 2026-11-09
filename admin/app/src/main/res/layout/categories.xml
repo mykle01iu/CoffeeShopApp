@@ -43,14 +43,28 @@
         android:textColor="@color/muted"
         android:textSize="13sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/categories_list"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingBottom="12dp" />
+        android:layout_weight="1">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/categories_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="12dp" />
+        <TextView
+            android:id="@+id/categories_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="24dp"
+            android:text="Chưa có danh mục nào.\nBấm 'Thêm danh mục' để bắt đầu."
+            android:textColor="@color/muted"
+            android:textSize="15sp" />
+    </FrameLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/add_category"

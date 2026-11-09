@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/** In-memory mock data for the category management exercise. */
+/** In-memory mock data for category management. */
 public class CategoryRepository {
     private final ArrayList<Category> categories = new ArrayList<>();
     private int nextId = 4;
@@ -17,9 +17,7 @@ public class CategoryRepository {
         categories.add(new Category(3, "Bánh ngọt", "Bánh dùng kèm đồ uống"));
     }
 
-    public List<Category> getAll() {
-        return Collections.unmodifiableList(categories);
-    }
+    public List<Category> getAll() { return Collections.unmodifiableList(categories); }
 
     public void add(String name, String description) {
         categories.add(new Category(nextId++, name, description));
@@ -30,9 +28,7 @@ public class CategoryRepository {
         category.description = description;
     }
 
-    public void delete(Category category) {
-        categories.remove(category);
-    }
+    public void delete(Category category) { categories.remove(category); }
 
     public boolean containsName(String name, Category except) {
         for (Category category : categories) {
