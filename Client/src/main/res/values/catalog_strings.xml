@@ -1,0 +1,28 @@
+<resources>
+    <string name="catalog_title">Th&#7921;c &#273;&#417;n</string>
+    <string name="catalog_open_new">Danh s&#225;ch m&#243;n</string>
+    <string name="catalog_search_hint">T&#236;m m&#243;n y&#234;u th&#237;ch</string>
+    <string name="search_description">T&#236;m ki&#7871;m</string>
+    <string name="clear_search">X&#243;a n&#7897;i dung t&#236;m ki&#7871;m</string>
+    <string name="catalog_empty_title">Kh&#244;ng t&#236;m th&#7845;y m&#243;n ph&#249; h&#7907;p</string>
+    <string name="catalog_empty_hint">Th&#7917; t&#7915; kh&#243;a kh&#225;c</string>
+    <string name="catalog_reset">X&#243;a b&#7897; l&#7885;c</string>
+    <string name="empty_icon_description">Bi&#7875;u t&#432;&#7907;ng &#273;&#7891; u&#7889;ng</string>
+    <string name="product_back">Quay l&#7841;i</string>
+    <string name="product_detail_title">Chi ti&#7871;t m&#243;n</string>
+    <string name="product_rating_format">%1$s %2$.1f (%3$d)</string>
+    <string name="product_price_format">%1$s&#273;</string>
+    <string name="product_reviews_format">(%1$d &#273;&#225;nh gi&#225;)</string>
+    <string name="product_not_found">M&#243;n kh&#244;ng c&#242;n t&#7891;n t&#7841;i</string>
+    <string name="product_go_back">Quay l&#7841;i th&#7921;c &#273;&#417;n</string>
+    <string name="product_description_title">M&#244; t&#7843;</string>
+    <string name="category_all_catalog">T&#7845;t c&#7843;</string>
+    <string name="category_coffee_catalog">C&#224; ph&#234;</string>
+    <string name="category_tea_catalog">Tr&#224;</string>
+    <string name="category_smoothie_catalog">&#272;&#225; xay</string>
+    <string name="category_cake_catalog">B&#225;nh</string>
+    <string name="category_other_catalog">Kh&#225;c</string>
+    <string name="product_review_section">&#272;&#225;nh gi&#225; kh&#225;ch h&#224;ng</string>
+    <string name="product_review_count_format">%1$d &#273;&#225;nh gi&#225;</string>
+    <string name="product_review_stars_format">%1$s %2$.1f</string>
+</resources>

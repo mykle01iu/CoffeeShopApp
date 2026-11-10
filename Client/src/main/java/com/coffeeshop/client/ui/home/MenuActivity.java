@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coffeeshop.client.R;
+import com.coffeeshop.client.data.CartManager;
+import com.coffeeshop.client.data.CartRepository;
 import com.coffeeshop.client.ui.common.FontUtils;
 import com.coffeeshop.client.ui.common.SystemInsets;
 
@@ -34,6 +36,7 @@ public class MenuActivity extends Activity {
     private final Map<String, Boolean> favorites = new LinkedHashMap<>();
     private final Map<String, Integer> cart = new LinkedHashMap<>();
     private SharedPreferences preferences;
+    private SharedPreferences cartPreferences;
     private LinearLayout productRows;
     private TextView resultCount;
     private TextView emptyState;
@@ -48,7 +51,10 @@ public class MenuActivity extends Activity {
         FontUtils.applyInter(findViewById(android.R.id.content));
         findViewById(R.id.menuTitle).setFocusable(true);
         ((TextView) findViewById(R.id.menuTitle)).setTypeface(FontUtils.lora(this, 500));
+        findViewById(R.id.openCatalogList).setOnClickListener(view ->
+                startActivity(new Intent(this, com.coffeeshop.client.catalog.ui.ProductListActivity.class)));
         preferences = getSharedPreferences("moc_mien_home", MODE_PRIVATE);
+        cartPreferences = CartRepository.getCartPreferences(this);
         productRows = findViewById(R.id.menuProductRows);
         resultCount = findViewById(R.id.menuResultCount);
         emptyState = findViewById(R.id.menuEmptyState);
@@ -60,10 +66,12 @@ public class MenuActivity extends Activity {
     }
 
     private void loadState() {
+        CartOptions.migrateOldCart(cartPreferences, products);
         for (DrinkProduct product : products) {
             favorites.put(product.id, preferences.getBoolean("favorite_" + product.id, false));
-            int count = preferences.getInt("cart_" + product.id, 0);
-            if (count > 0) cart.put(product.id, count);
+            for (CartOptions.Selection option : CartOptions.selections(cartPreferences, product)) {
+                cart.put(product.id + "|" + option.token(), option.quantity);
+            }
         }
     }
 
@@ -162,7 +170,7 @@ public class MenuActivity extends Activity {
         name.setTypeface(FontUtils.inter(this, 600));
         ((TextView) card.findViewById(R.id.drinkDescription)).setText(product.description);
         TextView price = card.findViewById(R.id.drinkPrice);
-        price.setText(String.format(Locale.getDefault(), "%,dđ", product.priceVnd));
+        price.setText(String.format(Locale.getDefault(), "%,d\u0111", CartOptions.price(product, "S")));
         price.setTypeface(FontUtils.inter(this, 700));
         ImageButton favorite = card.findViewById(R.id.favoriteDrinkButton);
         updateFavoriteIcon(favorite, product);
@@ -190,20 +198,24 @@ public class MenuActivity extends Activity {
     }
 
     private void addToCart(DrinkProduct product) {
-        int count = cart.containsKey(product.id) ? cart.get(product.id) + 1 : 1;
-        cart.put(product.id, count);
-        preferences.edit().putInt("cart_" + product.id, count).apply();
-        int total = 0;
-        for (int value : cart.values()) total += value;
-        Toast.makeText(this, getString(R.string.home_added_to_cart, product.name, total), Toast.LENGTH_SHORT).show();
+        int id;
+        try { id=Integer.parseInt(product.id); } catch(Exception ignored) { id=MenuCatalog.getProducts().indexOf(product)+1; }
+        for(com.coffeeshop.client.catalog.model.Product item:com.coffeeshop.client.catalog.data.ProductRepository.getProducts()) {
+            if(item.id!=id) continue;
+            ProductOptionsSheet.show(this,item,null,(options,quantity)->{
+                CartRepository.add(this,item,options,quantity); loadState();
+                String size=options.size==null?getString(R.string.options_no_size):options.size.label;
+                com.google.android.material.snackbar.Snackbar.make(findViewById(android.R.id.content),getString(R.string.options_added_snackbar,item.name,size,CartRepository.totalQuantity(this)),com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show();
+            });
+            return;
+        }
     }
-
     private void setupNavigation() {
         findViewById(R.id.navHomeItem).setOnClickListener(view -> {
             finish();
         });
         findViewById(R.id.navMenuItem).setOnClickListener(view -> ((ScrollView) findViewById(R.id.menuScrollView)).smoothScrollTo(0, 0));
-        findViewById(R.id.navOrdersItem).setOnClickListener(view -> showCart());
+        findViewById(R.id.navOrdersItem).setOnClickListener(view -> startActivity(new Intent(this, OrdersActivity.class)));
         View.OnClickListener profile = view -> startActivity(new Intent(this, ProfileActivity.class));
         findViewById(R.id.navProfileItem).setOnClickListener(profile);
     }
@@ -217,21 +229,24 @@ public class MenuActivity extends Activity {
         StringBuilder summary = new StringBuilder();
         int total = 0;
         for (Map.Entry<String, Integer> entry : cart.entrySet()) {
-            for (DrinkProduct product : products) if (product.id.equals(entry.getKey())) {
+            String[] parts = entry.getKey().split("\\|", 2);
+            for (DrinkProduct product : products) if (product.id.equals(parts[0])) {
+                CartOptions.Selection option = parts.length > 1 ? CartOptions.parseToken(parts[1]) : null;
+                if (option == null) continue;
                 if (summary.length() > 0) summary.append('\n');
-                summary.append(product.name).append(" × ").append(entry.getValue());
-                total += product.priceVnd * entry.getValue();
+                summary.append(product.name).append(" \u00b7 ").append(CartOptions.description(option)).append(" \u00d7 ").append(entry.getValue());
+                total += CartOptions.price(product, option) * entry.getValue();
             }
         }
         summary.append("\n\n").append(getString(R.string.home_favorite_subtotal,
-                String.format(Locale.getDefault(), "%,dđ", total)));
+                String.format(Locale.getDefault(), "%,d\u0111", total)));
         new AlertDialog.Builder(this).setTitle(R.string.home_cart_title).setMessage(summary.toString())
                 .setPositiveButton(android.R.string.ok, null).show();
     }
 
     private String normalize(String value) {
         String decomposed = Normalizer.normalize(value == null ? "" : value.toLowerCase(Locale.ROOT), Normalizer.Form.NFD);
-        return decomposed.replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replace('đ', 'd').trim();
+        return decomposed.replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replace('\u0111', 'd').trim();
     }
 
     private int dp(float value) {

@@ -1,6 +1,12 @@
 <resources>
-    <style name="Theme.CoffeeShop" parent="android:style/Theme.Material.Light.NoActionBar">
+    <style name="Theme.CoffeeShop" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/coffee_brown</item>
+        <item name="colorPrimaryVariant">@color/coffee_brown_dark</item>
+        <item name="colorOnPrimary">@color/coffee_cream</item>
+        <item name="colorSecondary">@color/coffee_accent</item>
+        <item name="colorOnSecondary">@color/coffee_cream</item>
         <item name="android:fontFamily">sans</item>
+        <item name="colorAccent">@color/coffee_accent</item>
         <item name="android:colorAccent">@color/coffee_accent</item>
         <item name="android:statusBarColor">@color/coffee_cream</item>
         <item name="android:navigationBarColor">@color/coffee_cream</item>

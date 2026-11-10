@@ -1,6 +1,6 @@
 <resources>
-    <string name="welcome_eyebrow">CH&#192;O M&#7914;NG B&#7840;N &#272;&#7870;N V&#7898;I</string>
-    <string name="welcome_photo_badge">M&#7896;C MI&#202;N &#8226; COFFEE</string>
+    <string name="welcome_eyebrow">CHÀO MỪNG BẠN ĐẾN VỚI</string>
+    <string name="welcome_photo_badge">MỘC MIÊN • COFFEE</string>
     <string name="splash_motto">Chậm một nhịp. Đậm một hương.</string>
     <string name="splash_footer_reference">CÀ PHÊ MỘC • KHOẢNH KHẮC MIÊN MAN</string>
     <string name="app_name">Mộc Miên Coffee</string>
@@ -118,6 +118,17 @@
     <string name="profile_address_action">Quản lý địa chỉ</string>
     <string name="profile_login_action">Đăng nhập / Tạo tài khoản</string>
     <string name="address_title">Địa chỉ nhận món</string>
+    <string name="feature_coming_soon">Tính năng sắp ra mắt</string>
+    <string name="change_password_title">Đổi mật khẩu</string>
+    <string name="current_password_label">Mật khẩu hiện tại</string>
+    <string name="new_password_label">Mật khẩu mới</string>
+    <string name="confirm_password_label">Nhập lại mật khẩu mới</string>
+    <string name="update_password_button">Cập nhật mật khẩu</string>
+    <string name="password_strength_weak">Yếu</string>
+    <string name="password_strength_medium">Trung bình</string>
+    <string name="password_strength_strong">Mạnh</string>
+    <string name="password_changed_success">Đổi mật khẩu thành công</string>
+    <string name="error_current_password_incorrect">Mật khẩu hiện tại không đúng</string>
     <string name="address_subtitle">Lưu địa chỉ để tiện đặt món lần sau.</string>
     <string name="address_label">Địa chỉ giao hàng</string>
     <string name="address_hint">Số nhà, tên đường, phường/xã, quận/huyện</string>
@@ -137,4 +148,151 @@
     <string name="profile_identifier_label">Email hoặc số điện thoại</string>
     <string name="profile_saved_account_status">Tài khoản đã đăng ký trên thiết bị này</string>
     <string name="profile_login_existing">Đăng nhập tài khoản này</string>
+    <string name="edit_profile_title">Chỉnh sửa hồ sơ</string>
+    <string name="edit_avatar_change">Đổi ảnh đại diện</string>
+    <string name="edit_name_label">Họ và tên</string>
+    <string name="edit_phone_label">Số điện thoại (Không thể sửa)</string>
+    <string name="edit_email_label">Email</string>
+    <string name="edit_birthday_label">Ngày sinh</string>
+    <string name="edit_gender_label">Giới tính</string>
+    <string name="gender_male">Nam</string>
+    <string name="gender_female">Nữ</string>
+    <string name="gender_other">Khác</string>
+    <string name="save_profile_button">Lưu thay đổi</string>
+    <string name="profile_saved_success">Đã lưu thay đổi</string>
+    <string name="favorites_title">Món yêu thích</string>
+    <string name="favorites_empty_title">Bạn chưa có món yêu thích</string>
+    <string name="favorites_empty_hint">Hãy thả tim những món bạn yêu thích để dễ dàng tìm lại nhé!</string>
+    <string name="explore_menu_button">Khám phá thực đơn</string>
+    <string name="settings_title">Cài đặt</string>
+    <string name="settings_notification_switch">Nhận thông báo khuyến mãi</string>
+    <string name="settings_theme_label">Giao diện ứng dụng</string>
+    <string name="settings_theme_light">Sáng</string>
+    <string name="settings_theme_dark">Tối</string>
+    <string name="settings_theme_system">Theo hệ thống</string>
+    <string name="settings_language_label">Ngôn ngữ</string>
+    <string name="settings_lang_vi">Tiếng Việt</string>
+    <string name="settings_lang_en">English</string>
+    <string name="referral_title">Giới thiệu bạn bè</string>
+    <string name="referral_code_label">MÃ GIỚI THIỆU CỦA BẠN</string>
+    <string name="referral_reward_desc">Bạn và bạn bè mỗi người nhận 20 điểm khi đơn đầu tiên hoàn tất.</string>
+    <string name="referral_copy_button">Sao chép mã</string>
+    <string name="referral_share_button">Chia sẻ</string>
+    <string name="referral_code_copied">Đã sao chép mã giới thiệu!</string>
+    <string name="about_title">Về ứng dụng</string>
+    <string name="about_app_name">Mộc Miên Coffee</string>
+    <string name="about_terms_row">Điều khoản sử dụng</string>
+    <string name="about_privacy_row">Chính sách bảo mật</string>
+    <string name="about_contact_title">Liên hệ hỗ trợ</string>
+
+    <!-- Checkout & Cart & Order Flow -->
+    <string name="cart_screen_title">Giỏ hàng</string>
+    <string name="cart_empty_title">Giỏ hàng đang trống</string>
+    <string name="cart_subtotal_label">Tạm tính</string>
+    <string name="cart_checkout_button">Thanh toán</string>
+
+    <string name="checkout_screen_title">Thanh toán</string>
+    <string name="checkout_address_label">Địa chỉ giao hàng</string>
+    <string name="checkout_payment_label">Phương thức thanh toán</string>
+    <string name="checkout_pay_cash">Tiền mặt khi nhận hàng (COD)</string>
+    <string name="checkout_pay_wallet">Ví điện tử MoMo / ZaloPay</string>
+    <string name="checkout_pay_card">Thẻ ngân hàng (ATM / Credit)</string>
+    <string name="checkout_note_label">Ghi chú cho quán</string>
+    <string name="checkout_note_hint">Giao lên tầng 3, gọi trước khi đến...</string>
+    <string name="checkout_voucher_label">Voucher ưu đãi</string>
+    <string name="checkout_voucher_select">Chọn hoặc nhập mã ›</string>
+    <string name="checkout_summary_title">Tóm tắt đơn hàng</string>
+    <string name="checkout_shipping_label">Phí giao hàng</string>
+    <string name="checkout_discount_label">Giảm giá</string>
+    <string name="checkout_total_label">Tổng cộng</string>
+    <string name="checkout_place_order_button">Đặt hàng</string>
+
+    <string name="order_success_title">Đặt hàng thành công!</string>
+    <string name="order_success_desc">Cảm ơn bạn đã đặt món tại Mộc Miên Coffee.\nĐơn hàng của bạn đang được quán chuẩn bị.</string>
+    <string name="order_success_code_label">Mã đơn hàng</string>
+    <string name="order_success_total_label">Tổng tiền thanh toán</string>
+    <string name="order_success_view_order">Xem đơn hàng</string>
+    <string name="order_success_back_home">Về trang chủ</string>
+
+    <string name="orders_screen_title">Lịch sử đơn hàng</string>
+    <string name="orders_empty_title">Bạn chưa có đơn hàng nào</string>
+    <string name="orders_order_now">Đặt món ngay</string>
+
+    <string name="order_detail_title">Chi tiết đơn hàng</string>
+    <string name="order_detail_items">Món đã đặt</string>
+    <string name="order_detail_shipping_info">Thông tin giao hàng</string>
+    <string name="order_detail_summary">Tóm tắt thanh toán</string>
+    <string name="order_detail_cancel_button">Hủy đơn hàng</string>
+    <string name="order_detail_reorder_button">Đặt lại đơn này</string>
+
+    <string name="voucher_picker_title">Chọn hoặc nhập mã Voucher</string>
+    <string name="voucher_picker_hint">Nhập mã voucher (ví dụ: GIAM20)</string>
+    <string name="voucher_picker_apply">Áp dụng</string>
+    <string name="voucher_picker_list_title">Danh sách Voucher của bạn</string>
+    <string name="voucher_picker_empty">Không có voucher nào phù hợp</string>
+
+    <!-- Support & Contact Screen Strings -->
+    <string name="support_title">Liên hệ hỗ trợ</string>
+    <string name="support_header_title">Mộc Miên luôn sẵn sàng hỗ trợ bạn</string>
+    <string name="support_status_open">Đang hỗ trợ · đến %1$s</string>
+    <string name="support_status_closed">Ngoài giờ · hỗ trợ lại lúc %1$s</string>
+    <string name="support_quick_contact_title">Liên hệ nhanh</string>
+    <string name="support_hotline_title">Gọi Hotline</string>
+    <string name="support_hotline_desc">%1$s (%2$s)</string>
+    <string name="support_email_title">Gửi Email</string>
+    <string name="support_fanpage_title">Fanpage Facebook</string>
+    <string name="support_address_title">Trụ sở Mộc Miên</string>
+    <string name="support_copied_toast">Đã sao chép: %1$s</string>
+    <string name="support_no_app_toast">Không tìm thấy ứng dụng phù hợp</string>
+    <string name="support_faq_title">Câu hỏi thường gặp</string>
+    <string name="support_ticket_section_title">Gửi yêu cầu hỗ trợ</string>
+    <string name="support_ticket_topic_label">Chọn chủ đề</string>
+    <string name="support_ticket_message_hint">Mô tả chi tiết vấn đề của bạn (tối thiểu 10 ký tự)...</string>
+    <string name="support_ticket_submit_button">Gửi yêu cầu</string>
+    <string name="support_ticket_submitted_toast">Đã gửi yêu cầu. Mộc Miên sẽ phản hồi trong 24 giờ</string>
+    <string name="support_my_tickets_title">Yêu cầu của bạn</string>
+    <string name="support_ticket_status_received">Đã tiếp nhận</string>
+    <string name="support_email_subject">Hỗ trợ khách hàng Mộc Miên</string>
+    <string name="topic_order">Đơn hàng</string>
+    <string name="topic_payment">Thanh toán</string>
+    <string name="topic_voucher">Voucher</string>
+    <string name="topic_feedback">Góp ý</string>
+    <string name="topic_other">Khác</string>
+
+    <!-- Legal Screen Strings -->
+    <string name="legal_last_updated_format">Cập nhật lần cuối: %1$s · Phiên bản %2$s</string>
+    <string name="legal_need_help_title">Cần hỗ trợ? Liên hệ Mộc Miên</string>
+    <string name="legal_scroll_to_top">Lên đầu trang</string>
+
+    <!-- Payment Methods & Checkout Strings -->
+    <string name="payment_methods_title">Phương thức thanh toán</string>
+    <string name="payment_link_wallet_button">Liên kết ví điện tử</string>
+    <string name="payment_add_card_button">Thêm thẻ ngân hàng</string>
+    <string name="payment_set_default">Đặt làm mặc định</string>
+    <string name="payment_delete">Xóa</string>
+    <string name="payment_delete_confirm_title">Xóa phương thức thanh toán</string>
+    <string name="payment_delete_confirm_message">Bạn có chắc chắn muốn xóa phương thức thanh toán %1$s không?</string>
+    <string name="payment_deleted_toast">Đã xóa %1$s</string>
+    <string name="payment_set_default_toast">Đã đặt %1$s làm mặc định</string>
+    <string name="wallet_sheet_title">Liên kết Ví điện tử</string>
+    <string name="wallet_sheet_subtitle">Chọn ví và nhập số điện thoại đăng ký ví</string>
+    <string name="wallet_provider_label">Chọn Ví điện tử</string>
+    <string name="wallet_phone_hint">Số điện thoại ví (10 số, VD: 0849123456)</string>
+    <string name="wallet_phone_error">Số điện thoại không hợp lệ (gồm 10 số bắt đầu bằng 0)</string>
+    <string name="wallet_submit_button">Liên kết ngay</string>
+    <string name="wallet_linked_toast">Liên kết ví thành công</string>
+    <string name="card_sheet_title">Thêm thẻ ngân hàng</string>
+    <string name="card_sheet_subtitle">Thông tin thẻ được bảo mật tuyệt đối theo chuẩn PCI-DSS</string>
+    <string name="card_number_hint">Số thẻ (16 số)</string>
+    <string name="card_number_error">Số thẻ không hợp lệ (kiểm tra lại dãy số)</string>
+    <string name="card_holder_hint">Tên in trên thẻ (VD: NGUYEN VAN A)</string>
+    <string name="card_holder_error">Vui lòng nhập tên chủ thẻ</string>
+    <string name="card_expiry_hint">Hạn dùng (MM/YY)</string>
+    <string name="card_expiry_error">Hạn dùng không hợp lệ hoặc đã hết hạn</string>
+    <string name="card_cvv_hint">Mã CVV/CVC (3 số)</string>
+    <string name="card_cvv_error">Mã CVV gồm 3 hoặc 4 chữ số</string>
+    <string name="card_submit_button">Lưu thẻ</string>
+    <string name="card_saved_toast">Thêm thẻ ngân hàng thành công</string>
+    <string name="checkout_link_now">Liên kết ngay</string>
+    <string name="checkout_not_linked">Chưa liên kết</string>
 </resources>

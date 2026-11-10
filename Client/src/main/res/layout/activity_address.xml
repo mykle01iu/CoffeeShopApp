@@ -35,10 +35,18 @@
             android:text="@string/address_subtitle"
             android:textColor="@color/coffee_muted"
             android:textSize="14sp" />
+        <Spinner
+            android:id="@+id/addressTypeSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_input"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="8dp"
             android:text="@string/address_label"
             android:textColor="@color/coffee_brown_dark"
