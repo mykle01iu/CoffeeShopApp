@@ -6,11 +6,16 @@
         android:roundIcon="@drawable/logo_moc_mien_transparent"
         android:supportsRtl="true"
         android:theme="@style/Theme.CoffeeShop">
+        <activity android:name=".catalog.ui.ProductListActivity" android:exported="false" />
+        <activity android:name=".catalog.ui.ProductDetailActivity" android:exported="false" />
         <activity
             android:name=".ui.home.HomeActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ui.home.MenuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.OrdersActivity"
             android:exported="false" />
         <activity
             android:name=".ui.home.ProfileActivity"
@@ -18,6 +23,46 @@
         <activity
             android:name=".ui.home.AddressActivity"
             android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.ChangePasswordActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.EditProfileActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.FavoritesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.ReferralActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.AboutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.SupportActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.LegalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.CartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.CheckoutActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.OrderSuccessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.OrderDetailActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.LoginActivity"

@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/coffee_cream">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="56dp" android:gravity="center_vertical" android:paddingHorizontal="8dp">
+        <ImageButton android:id="@+id/detailBack" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_arrow_back" android:background="?android:attr/selectableItemBackgroundBorderless" android:contentDescription="@string/product_back" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/product_detail_title" android:textSize="18sp" android:textStyle="bold" android:textColor="@color/coffee_text" android:paddingStart="8dp" />
+        <ImageButton android:id="@+id/detailFavorite" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_favorite_border" android:background="?android:attr/selectableItemBackgroundBorderless" android:tint="@color/coffee_accent" android:contentDescription="@null" android:padding="12dp" />
+    </LinearLayout>
+    <ScrollView android:id="@+id/detailScroll" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <LinearLayout android:id="@+id/detailContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+            <ImageView android:id="@+id/detailImage" android:layout_width="match_parent" android:layout_height="260dp" android:scaleType="centerCrop" android:background="@drawable/bg_drink_iced" android:contentDescription="@null" />
+            <TextView android:id="@+id/detailName" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="26sp" android:textStyle="bold" android:textColor="@color/coffee_text" android:layout_marginTop="18dp" />
+            <TextView android:id="@+id/detailCategory" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/coffee_muted" android:textSize="15sp" android:layout_marginTop="4dp" />
+            <TextView android:id="@+id/detailPrice" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/coffee_accent" android:textSize="22sp" android:textStyle="bold" android:layout_marginTop="14dp" />
+            <TextView android:id="@+id/detailRating" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/coffee_accent" android:textSize="16sp" android:layout_marginTop="6dp" android:paddingVertical="8dp" android:clickable="true" android:focusable="true" android:background="?android:attr/selectableItemBackground" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/product_description_title" android:textColor="@color/coffee_text" android:textStyle="bold" android:textSize="18sp" android:layout_marginTop="24dp" />
+            <TextView android:id="@+id/detailDescription" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/coffee_muted" android:textSize="16sp" android:lineSpacingExtra="4dp" android:layout_marginTop="8dp" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="26dp" android:layout_marginBottom="10dp">
+                <TextView android:id="@+id/reviewSectionTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/product_review_section" android:textColor="@color/coffee_text" android:textStyle="bold" android:textSize="18sp" />
+                <TextView android:id="@+id/reviewCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/coffee_muted" android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/reviewListContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+        </LinearLayout>
+    </ScrollView>
+    <Button android:id="@+id/detailAddToCart" android:layout_width="match_parent" android:layout_height="54dp" android:layout_marginStart="20dp" android:layout_marginEnd="20dp" android:layout_marginBottom="12dp" android:background="@drawable/bg_primary_button" android:text="@string/options_add_button" android:textAllCaps="false" android:textColor="@color/coffee_surface" android:textSize="16sp" android:textStyle="bold" />
+    <include android:id="@+id/detailError" layout="@layout/view_product_not_found" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:visibility="gone" />
+</LinearLayout>

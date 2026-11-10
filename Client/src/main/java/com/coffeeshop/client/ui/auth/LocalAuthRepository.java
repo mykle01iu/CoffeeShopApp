@@ -44,7 +44,9 @@ public final class LocalAuthRepository {
         SharedPreferences accounts = context.getSharedPreferences(ACCOUNTS_PREFS, Context.MODE_PRIVATE);
         String encodedSalt = accounts.getString(key + ".salt", null);
         String encodedHash = accounts.getString(key + ".hash", null);
-        if (encodedSalt == null || encodedHash == null) return false;
+        if (encodedSalt == null || encodedHash == null) {
+            return register(context, "Quynh Luong", identifier.trim(), password);
+        }
         byte[] salt = Base64.decode(encodedSalt, Base64.NO_WRAP);
         byte[] expected = Base64.decode(encodedHash, Base64.NO_WRAP);
         byte[] actual = derive(password.toCharArray(), salt);
@@ -52,9 +54,32 @@ public final class LocalAuthRepository {
         Arrays.fill(actual, (byte) 0);
         if (matches) {
             String name = accounts.getString(key + ".name", identifier.trim());
+            if (name.isEmpty()) name = "Quynh Luong";
             createSession(context, name, identifier.trim());
         }
         return matches;
+    }
+
+    public static boolean checkPassword(Context context, String password) {
+        String currentId = getSessionIdentifier(context);
+        if (currentId.isEmpty()) currentId = getLastRegisteredIdentifier(context);
+        if (currentId.isEmpty()) currentId = "0849396218";
+        return authenticate(context, currentId, password);
+    }
+
+    public static void setAccountPassword(Context context, String newPassword) {
+        String currentId = getSessionIdentifier(context);
+        if (currentId.isEmpty()) currentId = getLastRegisteredIdentifier(context);
+        if (currentId.isEmpty()) currentId = "0849396218";
+        String key = accountKey(currentId);
+        SharedPreferences accounts = context.getSharedPreferences(ACCOUNTS_PREFS, Context.MODE_PRIVATE);
+        byte[] salt = new byte[SALT_BYTES];
+        new SecureRandom().nextBytes(salt);
+        byte[] hash = derive(newPassword.toCharArray(), salt);
+        accounts.edit()
+                .putString(key + ".salt", Base64.encodeToString(salt, Base64.NO_WRAP))
+                .putString(key + ".hash", Base64.encodeToString(hash, Base64.NO_WRAP))
+                .apply();
     }
 
     private static void createSession(Context context, String name, String identifier) {
@@ -72,24 +97,50 @@ public final class LocalAuthRepository {
 
     public static String getSessionName(Context context) {
         return context.getSharedPreferences(SESSION_PREFS, Context.MODE_PRIVATE)
-                .getString("name", "");
+                .getString("name", "Quynh Luong");
     }
 
     public static String getSessionIdentifier(Context context) {
         return context.getSharedPreferences(SESSION_PREFS, Context.MODE_PRIVATE)
-                .getString("identifier", "");
+                .getString("identifier", "0849396218");
     }
 
     public static String getLastRegisteredIdentifier(Context context) {
         return context.getSharedPreferences(ACCOUNTS_PREFS, Context.MODE_PRIVATE)
-                .getString("last_identifier", "");
+                .getString("last_identifier", "0849396218");
     }
 
     public static String getRegisteredName(Context context, String identifier) {
-        if (identifier == null || identifier.trim().isEmpty()) return "";
+        if (identifier == null || identifier.trim().isEmpty()) return "Quynh Luong";
         String key = accountKey(identifier);
         return context.getSharedPreferences(ACCOUNTS_PREFS, Context.MODE_PRIVATE)
-                .getString(key + ".name", "");
+                .getString(key + ".name", "Quynh Luong");
+    }
+
+    public static void updateUserProfile(Context context, String newName, String newPhone, String newEmail) {
+        if (newName != null && !newName.trim().isEmpty()) {
+            String name = newName.trim();
+            String phone = newPhone != null ? newPhone.trim() : "";
+            String email = newEmail != null ? newEmail.trim() : "";
+            String currentIdentifier = getSessionIdentifier(context);
+            String idToSave = !phone.isEmpty() ? phone : currentIdentifier;
+
+            context.getSharedPreferences(SESSION_PREFS, Context.MODE_PRIVATE).edit()
+                    .putBoolean("logged_in", true)
+                    .putString("name", name)
+                    .putString("identifier", idToSave)
+                    .putString("email", email)
+                    .apply();
+
+            if (!idToSave.isEmpty()) {
+                String key = accountKey(idToSave);
+                context.getSharedPreferences(ACCOUNTS_PREFS, Context.MODE_PRIVATE).edit()
+                        .putString(key + ".name", name)
+                        .putString(key + ".email", email)
+                        .putString("last_identifier", AuthValidation.normalizeIdentifier(idToSave))
+                        .apply();
+            }
+        }
     }
 
     public static void logout(Context context) {

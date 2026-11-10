@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="favoritesTitle" type="id" />
+    <item name="favoritesBack" type="id" />
+    <item name="favoritesRecyclerView" type="id" />
+    <item name="favoritesEmptyView" type="id" />
+    <item name="btnExploreMenu" type="id" />
+</resources>

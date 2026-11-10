@@ -1,0 +1,23 @@
+<resources>
+ <string name="options_add_title">Tùy chọn món</string><string name="options_edit_title">Chỉnh sửa món</string>
+ <string name="options_size">Kích cỡ</string><string name="options_default">Mặc định</string>
+ <string name="options_sugar">Đường</string><string name="options_ice">Đá</string><string name="options_toppings">Topping</string>
+ <string name="options_max_toppings">Tối đa 3 topping</string><string name="options_note">Ghi chú cho quán</string>
+ <string name="options_note_hint">Ví dụ: ít ngọt, giao ở quầy</string><string name="options_warm">Hâm nóng giúp mình</string>
+ <string name="options_add_to_cart">Thêm vào giỏ · %1$s</string><string name="options_update">Cập nhật · %1$s</string>
+ <string name="options_added_snackbar">Đã thêm %1$s (%2$s). Giỏ hiện có %3$d món.</string>
+ <string name="options_updated_snackbar">Đã cập nhật %1$s. Giỏ hiện có %2$d món.</string>
+ <string name="options_no_size">Mặc định</string><string name="options_size_delta">+%1$s</string>
+ <string name="options_from_price">%1$s · Từ %2$s</string><string name="options_volume_360">360ml</string><string name="options_volume_480">480ml</string><string name="options_volume_600">600ml</string>
+ <string name="options_size_s">S</string><string name="options_size_m">M</string><string name="options_size_l">L</string>
+ <string name="options_sugar_0">0%</string><string name="options_sugar_30">30%</string><string name="options_sugar_50">50%</string><string name="options_sugar_70">70%</string><string name="options_sugar_100">100%</string>
+ <string name="options_ice_none">Không đá</string><string name="options_ice_less">Ít đá</string><string name="options_ice_normal">Đá vừa</string><string name="options_ice_more">Nhiều đá</string>
+ <string name="options_coffee">Cà phê</string><string name="options_tea">Trà</string><string name="options_frozen">Đá xay</string><string name="options_other">Khác</string><string name="options_cake">Bánh</string>
+ <string name="topping_espresso">Shot espresso</string><string name="topping_cheese">Kem cheese</string><string name="topping_coffee_jelly">Thạch cà phê</string>
+ <string name="topping_pearls">Trân châu đen</string><string name="topping_coconut_jelly">Thạch dừa</string><string name="topping_fruit_jelly">Thạch trái cây</string><string name="topping_pudding">Pudding</string><string name="topping_whipped">Kem whipping</string>
+ <string name="money_vnd">%1$sđ</string><string name="options_topping_price">%1$s · +%2$s</string>
+ <string name="options_summary_size">Size %1$s</string><string name="options_summary_sugar">%1$s đường</string><string name="options_summary_warm">Hâm nóng</string>
+ <string name="options_add_description">Thêm món vào giỏ</string>
+ <string name="options_add_button">Thêm vào giỏ</string>
+ <string name="cart_note_format">Ghi chú: %1$s</string>
+</resources>

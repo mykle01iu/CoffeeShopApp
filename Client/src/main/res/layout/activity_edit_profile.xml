@@ -1,0 +1,277 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/coffee_cream"
+    android:fillViewport="true"
+    android:overScrollMode="never">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="32dp">
+
+        <!-- Top Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/editProfileBack"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_filter_button"
+                android:contentDescription="@string/back_button_description"
+                android:padding="12dp"
+                android:src="@drawable/ic_arrow_back"
+                android:tint="@color/coffee_brown" />
+
+            <TextView
+                android:id="@+id/editProfileTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:text="@string/edit_profile_title"
+                android:textColor="@color/coffee_text"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Avatar Selection -->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp">
+
+            <FrameLayout
+                android:id="@+id/avatarFrame"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/bg_splash_logo_circle">
+
+                <ImageView
+                    android:id="@+id/editAvatarImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@null"
+                    android:padding="4dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_profile" />
+            </FrameLayout>
+
+            <ImageButton
+                android:id="@+id/btnPickAvatar"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignBottom="@id/avatarFrame"
+                android:layout_alignEnd="@id/avatarFrame"
+                android:background="@drawable/bg_primary_button"
+                android:contentDescription="@string/edit_avatar_change"
+                android:padding="8dp"
+                android:src="@drawable/ic_nav_cup"
+                android:tint="@color/coffee_surface" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="@string/edit_avatar_change"
+            android:textColor="@color/coffee_brown"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <!-- Form Fields -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_product_card"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Họ và tên -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_name_label"
+                android:textColor="@color/coffee_text"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editNameInput"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_input"
+                android:hint="Nhập họ và tên"
+                android:inputType="textPersonName"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:textColor="@color/coffee_text"
+                android:textColorHint="@color/coffee_muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/editNameError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/coffee_error"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <!-- Số điện thoại (Disabled) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/edit_phone_label"
+                android:textColor="@color/coffee_muted"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editPhoneInput"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_input"
+                android:enabled="false"
+                android:inputType="phone"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:textColor="@color/coffee_muted"
+                android:textSize="14sp" />
+
+            <!-- Email -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/edit_email_label"
+                android:textColor="@color/coffee_text"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editEmailInput"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_input"
+                android:hint="vidu@email.com"
+                android:inputType="textEmailAddress"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:textColor="@color/coffee_text"
+                android:textColorHint="@color/coffee_muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/editEmailError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/coffee_error"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <!-- Ngày sinh -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/edit_birthday_label"
+                android:textColor="@color/coffee_text"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editBirthdayInput"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_input"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="dd/MM/yyyy"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:textColor="@color/coffee_text"
+                android:textColorHint="@color/coffee_muted"
+                android:textSize="14sp" />
+
+            <!-- Giới tính -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/edit_gender_label"
+                android:textColor="@color/coffee_text"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/editGenderRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioGenderFemale"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/coffee_accent"
+                    android:text="@string/gender_female"
+                    android:textColor="@color/coffee_text"
+                    android:textSize="14sp" />
+
+                <RadioButton
+                    android:id="@+id/radioGenderMale"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/coffee_accent"
+                    android:text="@string/gender_male"
+                    android:textColor="@color/coffee_text"
+                    android:textSize="14sp" />
+
+                <RadioButton
+                    android:id="@+id/radioGenderOther"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/coffee_accent"
+                    android:text="@string/gender_other"
+                    android:textColor="@color/coffee_text"
+                    android:textSize="14sp" />
+            </RadioGroup>
+
+            <!-- Nút Lưu thay đổi -->
+            <Button
+                android:id="@+id/btnSaveProfile"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/bg_primary_button"
+                android:enabled="false"
+                android:text="@string/save_profile_button"
+                android:textAllCaps="false"
+                android:textColor="@color/coffee_surface"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

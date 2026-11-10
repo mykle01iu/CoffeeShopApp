@@ -1,0 +1,124 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/bg_product_card"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="12dp">
+
+    <!-- Image -->
+    <ImageView
+        android:id="@+id/cartItemImage"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:background="@drawable/bg_drink_iced"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/nauda" />
+
+    <!-- Name & Price -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/cartItemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/coffee_text"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:text="Nâu đá" />
+
+        <TextView
+            android:id="@+id/cartItemOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/coffee_muted"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="Size M · 50% đường · Ít đá" />
+
+        <TextView
+            android:id="@+id/cartItemNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/coffee_muted"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="Ghi chú: Ít ngọt" />
+
+        <TextView
+            android:id="@+id/cartItemPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/coffee_accent"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="29.000đ" />
+    </LinearLayout>
+
+    <!-- Quantity Selector (- qty +) -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btnCartMinus"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_filter_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="−"
+            android:textColor="@color/coffee_brown"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/cartItemQty"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/coffee_text"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/btnCartPlus"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_filter_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="+"
+            android:textColor="@color/coffee_brown"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Remove Item Button -->
+    <ImageButton
+        android:id="@+id/btnRemoveCartItem"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@null"
+        android:padding="6dp"
+        android:src="@drawable/ic_clear"
+        android:tint="@color/coffee_muted" />
+</LinearLayout>

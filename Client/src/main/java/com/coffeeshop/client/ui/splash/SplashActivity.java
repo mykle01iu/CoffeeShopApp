@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.TextView;
 
 import com.coffeeshop.client.R;
 import com.coffeeshop.client.ui.auth.AuthChoiceActivity;
@@ -36,7 +37,7 @@ public class SplashActivity extends Activity {
         SystemInsets.apply(this);
         FontUtils.applyInter(findViewById(android.R.id.content));
 
-        android.widget.TextView brandName = findViewById(R.id.splashBrandName);
+        TextView brandName = findViewById(R.id.splashBrandName);
         Typeface serif = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
                 ? Typeface.create(Typeface.create("serif", Typeface.NORMAL), 600, false)
                 : Typeface.create("serif", Typeface.BOLD);
