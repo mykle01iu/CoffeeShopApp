@@ -9,9 +9,19 @@
     android:paddingBottom="8dp">
 
     <EditText
+        android:id="@+id/input_category_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Mã danh mục (ví dụ: COFFEE)"
+        android:inputType="textCapCharacters"
+        android:maxLength="50"
+        android:maxLines="1" />
+
+    <EditText
         android:id="@+id/input_category_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:hint="Tên danh mục"
         android:inputType="textCapSentences"
         android:maxLines="1" />

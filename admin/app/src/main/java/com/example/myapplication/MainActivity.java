@@ -3,19 +3,18 @@ package com.example.myapplication;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.content.Intent;
-import android.net.Uri;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.auth.AccountStore;
 import com.example.myapplication.auth.SessionManager;
-import com.example.myapplication.data.CategoryRepository;
-import com.example.myapplication.data.ProductRepository;
+import com.example.myapplication.data.AuthApi;
+import com.example.myapplication.data.BackendApi;
 import com.example.myapplication.model.Category;
 import com.example.myapplication.ui.DashboardScreen;
 import com.example.myapplication.ui.LoginScreen;
@@ -24,14 +23,18 @@ import com.example.myapplication.ui.Navigator;
 import com.example.myapplication.ui.RevenueScreen;
 import com.example.myapplication.ui.ProductScreen;
 
-public class MainActivity extends AppCompatActivity implements Navigator {
+public class MainActivity extends AppCompatActivity
+        implements Navigator, LoginScreen.LocalNetworkPermissionGate {
+
+    private static final String ACCESS_LOCAL_NETWORK = "android.permission.ACCESS_LOCAL_NETWORK";
 
     private SessionManager session;
     private AccountStore accounts;
-    private CategoryRepository categories;
-    private ProductRepository products;
-    private ActivityResultLauncher<String[]> imagePicker;
-    private ProductImageCallback pendingImageCallback;
+    private BackendApi backendApi;
+    private AuthApi authApi;
+    private androidx.activity.result.ActivityResultLauncher<String> localNetworkPermissionLauncher;
+    private Runnable pendingPermissionGranted;
+    private Runnable pendingPermissionDenied;
     private OnBackPressedCallback backCallback;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable openLogin;
@@ -39,19 +42,17 @@ public class MainActivity extends AppCompatActivity implements Navigator {
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
-        imagePicker = registerForActivityResult(new ActivityResultContracts.OpenDocument(), uri -> {
-            if (uri != null) {
-                try {
-                    getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                } catch (SecurityException ignored) { }
-                if (pendingImageCallback != null) pendingImageCallback.onImagePicked(uri);
-            }
-            pendingImageCallback = null;
-        });
+        localNetworkPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(), granted -> {
+                    Runnable callback = granted ? pendingPermissionGranted : pendingPermissionDenied;
+                    pendingPermissionGranted = null;
+                    pendingPermissionDenied = null;
+                    if (callback != null) callback.run();
+                });
         session = new SessionManager(this);
         accounts = new AccountStore(this, session);
-        categories = new CategoryRepository();
-        products = new ProductRepository();
+        authApi = new AuthApi();
+        backendApi = new BackendApi(session);
 
         backCallback = new OnBackPressedCallback(false) {
             @Override
@@ -89,7 +90,19 @@ public class MainActivity extends AppCompatActivity implements Navigator {
     @Override
     public void showLogin() {
         backCallback.setEnabled(false);
-        new LoginScreen(this, this, accounts).show();
+        new LoginScreen(this, this, accounts, session, authApi, this).show();
+    }
+
+    @Override
+    public void ensureLocalNetworkPermission(Runnable onGranted, Runnable onDenied) {
+        if (Build.VERSION.SDK_INT < 37
+                || checkSelfPermission(ACCESS_LOCAL_NETWORK) == PackageManager.PERMISSION_GRANTED) {
+            onGranted.run();
+            return;
+        }
+        pendingPermissionGranted = onGranted;
+        pendingPermissionDenied = onDenied;
+        localNetworkPermissionLauncher.launch(ACCESS_LOCAL_NETWORK);
     }
 
     @Override
@@ -116,20 +129,14 @@ public class MainActivity extends AppCompatActivity implements Navigator {
     public void showCategories() {
         if (!requireLogin()) return;
         backCallback.setEnabled(true);
-        new CategoryScreen(this, this, categories, products).show();
+        new CategoryScreen(this, this, backendApi, session).show();
     }
 
     @Override
     public void showProducts(Category category) {
         if (!requireLogin()) return;
         backCallback.setEnabled(true);
-        new ProductScreen(this, this, categories, products, category).show();
-    }
-
-    @Override
-    public void pickProductImage(ProductImageCallback callback) {
-        pendingImageCallback = callback;
-        imagePicker.launch(new String[]{"image/*"});
+        new ProductScreen(this, this, backendApi, session, category).show();
     }
 
     // Chặn mọi màn hình nội bộ khi chưa có session

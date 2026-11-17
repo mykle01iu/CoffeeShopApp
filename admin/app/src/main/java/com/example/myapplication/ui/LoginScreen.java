@@ -9,22 +9,36 @@ import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.auth.AccountStore;
+import com.example.myapplication.auth.SessionManager;
+import com.example.myapplication.data.AuthApi;
 
 public class LoginScreen {
+
+    public interface LocalNetworkPermissionGate {
+        void ensureLocalNetworkPermission(Runnable onGranted, Runnable onDenied);
+    }
 
     private final Activity activity;
     private final Navigator navigator;
     private final AccountStore accounts;
+    private final SessionManager session;
+    private final AuthApi authApi;
+    private final LocalNetworkPermissionGate permissionGate;
 
     private TextView authTitle, authSubtitle, loginError, registerError, authSwitchLink;
     private View loginContainer, registerContainer;
     private boolean showingLogin = true;
     private boolean showingChoice = true;
 
-    public LoginScreen(Activity activity, Navigator navigator, AccountStore accounts) {
+    public LoginScreen(Activity activity, Navigator navigator, AccountStore accounts,
+                       SessionManager session, AuthApi authApi,
+                       LocalNetworkPermissionGate permissionGate) {
         this.activity = activity;
         this.navigator = navigator;
         this.accounts = accounts;
+        this.session = session;
+        this.authApi = authApi;
+        this.permissionGate = permissionGate;
     }
 
     public void show() {
@@ -84,20 +98,33 @@ public class LoginScreen {
             return;
         }
 
-        switch (accounts.login(email, password)) {
-            case SUCCESS:
-                navigator.showDashboard();
-                break;
-            case PENDING_APPROVAL:
-                UiUtils.showError(loginError, "Tài khoản đang chờ admin phê duyệt.");
-                break;
-            case WRONG_CREDENTIALS:
-                UiUtils.showError(loginError, "Email hoặc mật khẩu không chính xác.");
-                break;
-            default:
-                UiUtils.showError(loginError, "Không thể xác thực tài khoản. Vui lòng thử lại.");
-                break;
-        }
+        View loginButton = activity.findViewById(R.id.login_button);
+        loginButton.setEnabled(false);
+        permissionGate.ensureLocalNetworkPermission(
+                () -> authApi.login(email, password, new AuthApi.Callback() {
+                    @Override
+                    public void onSuccess(AuthApi.LoginResult result) {
+                        loginButton.setEnabled(true);
+                        if (!"ADMIN".equalsIgnoreCase(result.role)) {
+                            UiUtils.showError(loginError,
+                                    "Tài khoản đăng nhập được nhưng chưa được cấp quyền ADMIN.");
+                            return;
+                        }
+                        session.createBackendSession(result.token, result.email, result.role);
+                        navigator.showDashboard();
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        loginButton.setEnabled(true);
+                        UiUtils.showError(loginError, message);
+                    }
+                }),
+                () -> {
+                    loginButton.setEnabled(true);
+                    UiUtils.showError(loginError,
+                            "Cần cho phép truy cập mạng cục bộ để kết nối backend.");
+                });
     }
 
     private void onRegister() {
