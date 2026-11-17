@@ -9,11 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.data.ProductRepository;
 import com.example.myapplication.model.Category;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
     public interface Listener {
@@ -24,16 +25,20 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     private final List<Category> categories = new ArrayList<>();
     private final Listener listener;
-    private final ProductRepository products;
+    private Map<String, Integer> productCounts = new HashMap<>();
 
-    public CategoryAdapter(Listener listener, ProductRepository products) {
+    public CategoryAdapter(Listener listener) {
         this.listener = listener;
-        this.products = products;
     }
 
     public void submitList(List<Category> items) {
         categories.clear();
         categories.addAll(items);
+        notifyDataSetChanged();
+    }
+
+    public void setProductCounts(Map<String, Integer> counts) {
+        productCounts = new HashMap<>(counts);
         notifyDataSetChanged();
     }
 
@@ -48,7 +53,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.name.setText(category.name);
         holder.description.setText(category.description == null || category.description.isEmpty()
                 ? "Chưa có mô tả" : category.description);
-        holder.productCount.setText(products.getByCategory(category).size() + " sản phẩm đang kinh doanh");
+        Integer count = productCounts.get(category.code.toUpperCase(java.util.Locale.ROOT));
+        holder.productCount.setText(count == null
+                ? "Đang tải số sản phẩm"
+                : count + " sản phẩm đang kinh doanh");
         holder.edit.setOnClickListener(v -> listener.onEdit(category));
         holder.delete.setOnClickListener(v -> listener.onDelete(category));
         holder.itemView.setOnClickListener(v -> listener.onOpen(category));

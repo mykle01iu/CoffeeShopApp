@@ -3,16 +3,14 @@ package com.example.myapplication.auth;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.util.UUID;
-
-// Quản lý phiên đăng nhập. Token hiện là placeholder (UUID ngẫu nhiên),
-// sau này có backend thì thay bằng token thật từ server.
+/** Stores the authenticated backend session. */
 public class SessionManager {
 
     private static final String PREFS_NAME = "auth_session";
     private static final String KEY_TOKEN = "token";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_ROLE = "role";
+    private static final String KEY_BACKEND_SESSION = "backend_session";
 
     private final SharedPreferences prefs;
 
@@ -21,20 +19,31 @@ public class SessionManager {
                 .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
+    /** Legacy local-session method retained for AccountStore compatibility. */
     public void createSession(String email, String role) {
         prefs.edit()
-                .putString(KEY_TOKEN, UUID.randomUUID().toString())
+                .remove(KEY_TOKEN)
                 .putString(KEY_EMAIL, email)
                 .putString(KEY_ROLE, role)
+                .putBoolean(KEY_BACKEND_SESSION, false)
+                .commit();
+    }
+
+    public void createBackendSession(String token, String email, String role) {
+        prefs.edit()
+                .putString(KEY_TOKEN, token)
+                .putString(KEY_EMAIL, email)
+                .putString(KEY_ROLE, role)
+                .putBoolean(KEY_BACKEND_SESSION, true)
                 .commit();
     }
 
     public boolean isLoggedIn() {
-        return getToken() != null;
+        return prefs.getBoolean(KEY_BACKEND_SESSION, false) && getToken() != null;
     }
 
     public boolean isAdmin() {
-        return AccountStore.ROLE_ADMIN.equals(getRole());
+        return AccountStore.ROLE_ADMIN.equalsIgnoreCase(getRole());
     }
 
     public String getToken() {
