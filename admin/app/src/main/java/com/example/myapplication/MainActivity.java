@@ -16,12 +16,15 @@ import com.example.myapplication.auth.SessionManager;
 import com.example.myapplication.data.AuthApi;
 import com.example.myapplication.data.BackendApi;
 import com.example.myapplication.model.Category;
+import com.example.myapplication.model.Order;
 import com.example.myapplication.ui.DashboardScreen;
 import com.example.myapplication.ui.LoginScreen;
 import com.example.myapplication.ui.CategoryScreen;
 import com.example.myapplication.ui.Navigator;
 import com.example.myapplication.ui.RevenueScreen;
 import com.example.myapplication.ui.ProductScreen;
+import com.example.myapplication.ui.OrderScreen;
+import com.example.myapplication.ui.OrderDetailScreen;
 
 public class MainActivity extends AppCompatActivity
         implements Navigator, LoginScreen.LocalNetworkPermissionGate {
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity
     private OnBackPressedCallback backCallback;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable openLogin;
+    private boolean showingOrderDetail;
 
     @Override
     protected void onCreate(Bundle state) {
@@ -57,7 +61,8 @@ public class MainActivity extends AppCompatActivity
         backCallback = new OnBackPressedCallback(false) {
             @Override
             public void handleOnBackPressed() {
-                showDashboard();
+                if (showingOrderDetail) showOrders();
+                else showDashboard();
             }
         };
         getOnBackPressedDispatcher().addCallback(this, backCallback);
@@ -115,7 +120,24 @@ public class MainActivity extends AppCompatActivity
     public void showDashboard() {
         if (!requireLogin()) return;
         backCallback.setEnabled(false);
+        showingOrderDetail = false;
         new DashboardScreen(this, this, accounts).show();
+    }
+
+    @Override
+    public void showOrders() {
+        if (!requireLogin()) return;
+        showingOrderDetail = false;
+        backCallback.setEnabled(true);
+        new OrderScreen(this, this).show();
+    }
+
+    @Override
+    public void showOrderDetail(Order order) {
+        if (!requireLogin()) return;
+        showingOrderDetail = true;
+        backCallback.setEnabled(true);
+        new OrderDetailScreen(this, this, order).show();
     }
 
     @Override
