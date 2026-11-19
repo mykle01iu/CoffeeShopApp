@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="390" height="844" viewBox="0 0 390 844">
+  <title>Mộc Miên Admin — Đăng nhập</title>
+  <desc>Màn hình đăng nhập admin cho quán cà phê Mộc Miên, thiết kế mobile và có thể nhập vào Figma để chỉnh sửa.</desc>
+  <defs>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#35271F" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <g id="Mobile-Login-Screen">
+    <rect id="Page-Background" width="390" height="844" fill="#F8F5EF"/>
+
+    <g id="Brand-Header">
+      <circle id="Logo-Badge" cx="195" cy="104" r="34" fill="#F0EAE0" stroke="#E7DFD4"/>
+      <g id="Coffee-Cup-Icon" fill="none" stroke="#79533C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M181 96h22v17a8 8 0 0 1-8 8h-6a8 8 0 0 1-8-8V96Z"/>
+        <path d="M203 100h4a5 5 0 0 1 0 10h-4M179 124h29"/>
+        <path d="M187 89c-2-3 2-4 0-7M196 89c-2-3 2-4 0-7"/>
+      </g>
+      <text id="Brand-Name" x="195" y="169" text-anchor="middle" fill="#35271F" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="2.2">MỘC MIÊN · ADMIN</text>
+      <text id="Welcome-Title" x="195" y="218" text-anchor="middle" fill="#35271F" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="700" letter-spacing="-0.5">Chào mừng trở lại</text>
+      <text id="Welcome-Description" x="195" y="246" text-anchor="middle" fill="#82766B" font-family="Inter, Arial, sans-serif" font-size="13.5" font-weight="400">Đăng nhập để quản lý cửa hàng của bạn</text>
+    </g>
+
+    <g id="Login-Form-Card" filter="url(#cardShadow)">
+      <rect id="Card-Surface" x="24" y="278" width="342" height="414" rx="18" fill="#FFFDFA" stroke="#E7DFD4"/>
+
+      <g id="Auth-Tabs">
+        <rect id="Tabs-Track" x="42" y="298" width="306" height="44" rx="11" fill="#F0EAE0"/>
+        <rect id="Login-Tab-Selected" x="44" y="300" width="151" height="40" rx="9" fill="#35271F"/>
+        <text id="Login-Tab-Label" x="119.5" y="325" text-anchor="middle" fill="#FFF9EF" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600">Đăng nhập</text>
+        <text id="Register-Tab-Label" x="270.5" y="325" text-anchor="middle" fill="#82766B" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600">Đăng ký</text>
+      </g>
+
+      <g id="Email-Field">
+        <text id="Email-Label" x="44" y="381" fill="#35271F" font-family="Inter, Arial, sans-serif" font-size="12.5" font-weight="600">Email</text>
+        <rect id="Email-Input" x="42" y="393" width="306" height="52" rx="10" fill="#FFFDFA" stroke="#E7DFD4"/>
+        <text id="Email-Placeholder" x="58" y="425" fill="#82766B" font-family="Inter, Arial, sans-serif" font-size="13">admin@coffeehouse.vn</text>
+      </g>
+
+      <g id="Password-Field">
+        <text id="Password-Label" x="44" y="482" fill="#35271F" font-family="Inter, Arial, sans-serif" font-size="12.5" font-weight="600">Mật khẩu</text>
+        <rect id="Password-Input" x="42" y="494" width="306" height="52" rx="10" fill="#FFFDFA" stroke="#E7DFD4"/>
+        <text id="Password-Placeholder" x="58" y="526" fill="#82766B" font-family="Inter, Arial, sans-serif" font-size="13">Nhập mật khẩu</text>
+        <g id="Password-Visibility-Icon" transform="translate(319 515)" fill="none" stroke="#82766B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M-10 0s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"/>
+          <circle cx="0" cy="0" r="2.5"/>
+        </g>
+      </g>
+
+      <g id="Forgot-Password-Link">
+        <text x="346" y="570" text-anchor="end" fill="#79533C" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600">Quên mật khẩu?</text>
+      </g>
+
+      <g id="Primary-Login-Button">
+        <rect id="Login-Button-Surface" x="42" y="590" width="306" height="52" rx="11" fill="#35271F"/>
+        <text id="Login-Button-Label" x="195" y="622" text-anchor="middle" fill="#FFF9EF" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="650">Đăng nhập</text>
+      </g>
+    </g>
+
+    <g id="Registration-Notice">
+      <circle id="Notice-Info-Icon" cx="43" cy="728" r="9" fill="#F0EAE0" stroke="#E7DFD4"/>
+      <text x="43" y="732" text-anchor="middle" fill="#79533C" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700">i</text>
+      <text id="Notice-Line-1" x="60" y="724" fill="#82766B" font-family="Inter, Arial, sans-serif" font-size="11.5">Tài khoản đăng ký sẽ chờ quản trị viên xác nhận</text>
+      <text id="Notice-Line-2" x="60" y="742" fill="#82766B" font-family="Inter, Arial, sans-serif" font-size="11.5">trước khi sử dụng.</text>
+    </g>
+  </g>
+</svg>

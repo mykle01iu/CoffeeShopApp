@@ -1,0 +1,7 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="28dp" tools:showIn="@layout/activity_product_list">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="☕" android:textSize="48sp" android:contentDescription="@string/empty_icon_description" />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/catalog_empty_title" android:textColor="@color/coffee_text" android:textStyle="bold" android:textSize="18sp" android:layout_marginTop="12dp" />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/catalog_empty_hint" android:textColor="@color/coffee_muted" android:layout_marginTop="6dp" />
+    <Button android:id="@+id/resetFilters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/catalog_reset" android:layout_marginTop="16dp" />
+</LinearLayout>

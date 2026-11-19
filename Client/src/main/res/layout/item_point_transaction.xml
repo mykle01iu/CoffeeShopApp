@@ -1,0 +1,76 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <!-- Circle Icon Container -->
+        <FrameLayout
+            android:id="@+id/transactionIconContainer"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_splash_logo_circle">
+
+            <ImageView
+                android:id="@+id/transactionIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_arrow_up_right"
+                android:tint="@color/coffee_accent" />
+        </FrameLayout>
+
+        <!-- Center: Title & Date -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/transactionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/coffee_text"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="Đơn hàng #082121" />
+
+            <TextView
+                android:id="@+id/transactionDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/coffee_muted"
+                android:textSize="12sp"
+                tools:text="04/11/2026" />
+        </LinearLayout>
+
+        <!-- Right: Points (+20 or -50) -->
+        <TextView
+            android:id="@+id/transactionPoints"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/coffee_accent"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="+20" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/coffee_border" />
+</LinearLayout>

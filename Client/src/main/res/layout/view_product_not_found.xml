@@ -1,0 +1,4 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="28dp">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/product_not_found" android:textSize="19sp" android:textStyle="bold" android:textColor="@color/coffee_text" />
+    <Button android:id="@+id/notFoundBack" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/product_go_back" android:layout_marginTop="16dp" />
+</LinearLayout>

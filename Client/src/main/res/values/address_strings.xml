@@ -1,0 +1,35 @@
+<resources>
+    <string name="delivery_section">&#272;&#7883;a ch&#7881; giao h&#224;ng</string>
+    <string name="delivery_enter">Nh&#7853;p th&#244;ng tin giao h&#224;ng</string>
+    <string name="delivery_change">Thay &#273;&#7893;i</string>
+    <string name="delivery_one_time">D&#249;ng m&#7897;t l&#7847;n</string>
+    <string name="delivery_missing">Vui l&#242;ng nh&#7853;p th&#244;ng tin giao h&#224;ng</string>
+    <string name="address_form_title">Th&#244;ng tin giao h&#224;ng</string>
+    <string name="address_receiver">T&#234;n ng&#432;&#7901;i nh&#7853;n</string>
+    <string name="address_phone">S&#7889; &#273;i&#7879;n tho&#7841;i</string>
+    <string name="address_street">S&#7889; nh&#224; / t&#234;n &#273;&#432;&#7901;ng</string>
+    <string name="address_ward">Ph&#432;&#7901;ng/X&#227;</string>
+    <string name="address_district">Qu&#7853;n/Huy&#7879;n</string>
+    <string name="address_city">T&#7881;nh/Th&#224;nh ph&#7889;</string>
+    <string name="address_home_label">Nh&#224;</string>
+    <string name="address_office_label">C&#244;ng ty</string>
+    <string name="address_other_label">Kh&#225;c</string>
+    <string name="address_save_book">L&#432;u v&#224;o s&#7893; &#273;&#7883;a ch&#7881;</string>
+    <string name="address_make_default">&#272;&#7863;t l&#224;m &#273;&#7883;a ch&#7881; m&#7863;c &#273;&#7883;nh</string>
+    <string name="address_confirm">X&#225;c nh&#7853;n</string>
+    <string name="address_delete">X&#243;a &#273;&#7883;a ch&#7881;</string>
+    <string name="address_delete_confirm">B&#7841;n c&#243; ch&#7855;c mu&#7889;n x&#243;a &#273;&#7883;a ch&#7881; n&#224;y?</string>
+    <string name="address_picker_title">Ch&#7885;n &#273;&#7883;a ch&#7881; giao h&#224;ng</string>
+    <string name="address_add_new">Th&#234;m &#273;&#7883;a ch&#7881; m&#7899;i</string>
+    <string name="address_default_badge">M&#7863;c &#273;&#7883;nh</string>
+    <string name="address_empty_title">B&#7841;n ch&#432;a c&#243; &#273;&#7883;a ch&#7881; n&#224;o</string>
+    <string name="address_add">Th&#234;m &#273;&#7883;a ch&#7881;</string>
+    <string name="address_edit">S&#7917;a &#273;&#7883;a ch&#7881;</string>
+    <string name="address_error_required">Vui l&#242;ng nh&#7853;p th&#244;ng tin n&#224;y</string>
+    <string name="address_error_name">T&#234;n ng&#432;&#7901;i nh&#7853;n ph&#7843;i c&#243; &#237;t nh&#7845;t 2 k&#253; t&#7921;</string>
+    <string name="address_error_phone">S&#7889; &#273;i&#7879;n tho&#7841;i ph&#7843;i g&#7891;m 10 s&#7889; v&#224; b&#7855;t &#273;&#7847;u b&#7857;ng 0</string>
+    <string name="address_profile_name">Quynh Luong</string>
+    <string name="address_profile_phone">0849396218</string>
+    <string name="address_default_city">H&#224; N&#7897;i</string>
+    <string name="address_home_delivery_prefix">Giao &#273;&#7871;n: %1$s, %2$s</string>
+</resources>
