@@ -3,6 +3,7 @@ package com.coffeeshop.backend.config;
 
 import com.coffeeshop.backend.security.JwtAuthFilter;
 import jakarta.servlet.DispatcherType;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -129,7 +130,35 @@ public class SecurityConfig {
                         ).hasRole("ADMIN")
 
                         // ==============================
-                        // 4. OTHER API
+                        // 4. ORDER API - NGAY 6
+                        // ==============================
+
+                        // Chi ADMIN duoc xem tat ca don hang
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/orders/admin"
+                        ).hasRole("ADMIN")
+
+                        // USER va ADMIN deu co the tao don
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/orders"
+                        ).authenticated()
+
+                        // USER va ADMIN xem don cua minh
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/orders/my"
+                        ).authenticated()
+
+                        // Cac Order API khac yeu cau dang nhap
+                        .requestMatchers(
+                                "/api/orders",
+                                "/api/orders/**"
+                        ).authenticated()
+
+                        // ==============================
+                        // 5. OTHER API
                         // ==============================
 
                         // API con lai bat buoc dang nhap
