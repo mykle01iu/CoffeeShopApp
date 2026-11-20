@@ -42,14 +42,30 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/openCatalogList"
+                android:id="@+id/menuCartButton"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_category_chip"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/cart_screen_title"
+                android:textColor="@color/coffee_brown"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/menuLogoutButton"
                 android:layout_width="wrap_content"
                 android:layout_height="38dp"
                 android:background="@drawable/bg_category_chip_selected"
                 android:gravity="center"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
-                android:text="@string/catalog_open_new"
+                android:text="@string/logout_button"
                 android:textColor="@color/coffee_surface"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -127,6 +143,54 @@
                 android:gravity="center_vertical"
                 android:textColor="@color/coffee_muted"
                 android:textSize="12sp" />
+
+            <LinearLayout
+                android:id="@+id/menuLoadingState"
+                android:layout_width="match_parent"
+                android:layout_height="88dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:indeterminateTint="@color/coffee_brown" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Đang tải thực đơn..."
+                    android:textColor="@color/coffee_muted"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/menuErrorState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/menuErrorMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/coffee_muted"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/menuRetryButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Thử lại"
+                    android:textAllCaps="false" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/menuProductRows"

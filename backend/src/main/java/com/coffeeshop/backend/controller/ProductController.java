@@ -3,6 +3,7 @@ package com.coffeeshop.backend.controller;
 
 import com.coffeeshop.backend.entity.Product;
 import com.coffeeshop.backend.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,21 +23,28 @@ public class ProductController {
 
     // 1. Lay tat ca san pham
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-
-        return ResponseEntity.ok(
-                productService.getAllProducts()
-        );
+    public ResponseEntity<List<ProductResponse>> getAllProducts(
+            @RequestParam(required = false) String category,
+            HttpServletRequest request) {
+        List<Product> products;
+        if (category == null || category.isBlank()) {
+            products = productService.getAllProducts();
+        } else {
+            products = productService.getProductsByCategory(category);
+        }
+        return ResponseEntity.ok(products.stream()
+                .map(product -> ProductResponse.from(product, request))
+                .toList());
     }
 
     // 2. Lay san pham theo ID
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(
-            @PathVariable Long id) {
+    public ResponseEntity<ProductResponse> getProductById(
+            @PathVariable Long id,
+            HttpServletRequest request) {
 
-        return ResponseEntity.ok(
-                productService.getProductById(id)
-        );
+        return ResponseEntity.ok(ProductResponse.from(
+                productService.getProductById(id), request));
     }
 
     // 3. Them san pham - ADMIN

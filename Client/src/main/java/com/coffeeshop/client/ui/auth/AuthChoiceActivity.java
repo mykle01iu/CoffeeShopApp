@@ -11,7 +11,8 @@ import android.widget.TextView;
 import com.coffeeshop.client.R;
 import com.coffeeshop.client.ui.common.FontUtils;
 import com.coffeeshop.client.ui.common.SystemInsets;
-import com.coffeeshop.client.ui.home.HomeActivity;
+import com.coffeeshop.client.data.auth.TokenManager;
+import com.coffeeshop.client.ui.home.MenuActivity;
 
 public class AuthChoiceActivity extends Activity {
     @Override
@@ -36,7 +37,11 @@ public class AuthChoiceActivity extends Activity {
                 startActivity(new Intent(this, RegisterActivity.class)));
 
         findViewById(R.id.exploreMenuLink).setOnClickListener(view -> {
-            startActivity(new Intent(this, HomeActivity.class));
+            if (TokenManager.getInstance(this).getToken().isEmpty()) {
+                startActivity(new Intent(this, LoginActivity.class));
+            } else {
+                startActivity(new Intent(this, MenuActivity.class));
+            }
             finish();
         });
     }

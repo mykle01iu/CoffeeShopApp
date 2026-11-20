@@ -1,6 +1,5 @@
 package com.coffeeshop.client.ui.home;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,12 +10,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.coffeeshop.client.R;
-import com.coffeeshop.client.catalog.ui.ProductListActivity;
 import com.coffeeshop.client.data.OrderRepository;
+import com.coffeeshop.client.data.remote.ApiResult;
+import com.coffeeshop.client.data.remote.dto.OrderResponseDto;
 import com.coffeeshop.client.model.CartItem;
 import com.coffeeshop.client.model.Order;
 import com.coffeeshop.client.model.OrderStatus;
@@ -27,14 +28,20 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Collections;
 
-public class OrdersActivity extends Activity {
+public class OrdersActivity extends androidx.appcompat.app.AppCompatActivity {
 
     private OrderStatus selectedFilter = null; // null = Tất cả
     private TextView chipAll, chipPreparing, chipCompleted, chipCancelled;
     private RecyclerView recyclerView;
     private View emptyView;
+    private View loadingView, errorView;
+    private TextView errorMessage;
     private OrderHistoryAdapter adapter;
+    private OrderViewModel orderViewModel;
+    private List<Order> orders = Collections.emptyList();
+    private boolean hasLoadedOrders;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +61,12 @@ public class OrdersActivity extends Activity {
 
         recyclerView = findViewById(R.id.ordersRecyclerView);
         emptyView = findViewById(R.id.ordersEmptyView);
+        loadingView = findViewById(R.id.ordersLoading);
+        errorView = findViewById(R.id.ordersErrorView);
+        errorMessage = findViewById(R.id.ordersErrorMessage);
 
         findViewById(R.id.btnOrderNow).setOnClickListener(v -> {
-            startActivity(new Intent(this, ProductListActivity.class));
+            startActivity(new Intent(this, MenuActivity.class));
             finish();
         });
 
@@ -74,23 +84,56 @@ public class OrdersActivity extends Activity {
         chipCompleted.setOnClickListener(v -> selectFilter(OrderStatus.COMPLETED));
         chipCancelled.setOnClickListener(v -> selectFilter(OrderStatus.CANCELLED));
 
-        selectFilter(null);
+        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
+        orderViewModel.getOrdersResult().observe(this, this::onOrdersResult);
+        findViewById(R.id.ordersRetryButton).setOnClickListener(v -> orderViewModel.loadOrders());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        selectFilter(selectedFilter);
+        if (orderViewModel != null) orderViewModel.loadOrders();
     }
 
     private void selectFilter(OrderStatus filter) {
         selectedFilter = filter;
         updateChipStyles();
+        renderOrders();
+    }
 
-        List<Order> all = OrderRepository.getOrders(this);
+    private void onOrdersResult(ApiResult<List<OrderResponseDto>> result) {
+        if (result == null) return;
+        if (result.status == ApiResult.Status.LOADING) {
+            hasLoadedOrders = false;
+            loadingView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
+            return;
+        }
+        loadingView.setVisibility(View.GONE);
+        if (result.status == ApiResult.Status.ERROR) {
+            hasLoadedOrders = false;
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.GONE);
+            errorMessage.setText(result.message == null ? "Không tải được lịch sử đơn hàng" : result.message);
+            errorView.setVisibility(View.VISIBLE);
+            return;
+        }
+        errorView.setVisibility(View.GONE);
+        orders = OrderRepository.cacheRemoteOrders(result.data);
+        hasLoadedOrders = true;
+        renderOrders();
+    }
+
+    private void renderOrders() {
+        if (!hasLoadedOrders) return;
         List<Order> filtered = new ArrayList<>();
-        for (Order o : all) {
-            if (filter == null || o.status == filter) {
+        for (Order o : orders) {
+            boolean matches = selectedFilter == null || o.status == selectedFilter
+                    || (selectedFilter == OrderStatus.PREPARING
+                    && (o.status == OrderStatus.PENDING || o.status == OrderStatus.CONFIRMED));
+            if (matches) {
                 filtered.add(o);
             }
         }
@@ -160,6 +203,14 @@ public class OrdersActivity extends Activity {
 
             if (order.status == OrderStatus.PREPARING) {
                 h.statusChip.setText("ĐANG CHUẨN BỊ");
+                h.statusChip.setBackgroundColor(Color.parseColor("#FFF3E0"));
+                h.statusChip.setTextColor(Color.parseColor("#EF6C00"));
+            } else if (order.status == OrderStatus.PENDING) {
+                h.statusChip.setText("CHỜ XÁC NHẬN");
+                h.statusChip.setBackgroundColor(Color.parseColor("#FFF3E0"));
+                h.statusChip.setTextColor(Color.parseColor("#EF6C00"));
+            } else if (order.status == OrderStatus.CONFIRMED) {
+                h.statusChip.setText("ĐÃ XÁC NHẬN");
                 h.statusChip.setBackgroundColor(Color.parseColor("#FFF3E0"));
                 h.statusChip.setTextColor(Color.parseColor("#EF6C00"));
             } else if (order.status == OrderStatus.COMPLETED) {
