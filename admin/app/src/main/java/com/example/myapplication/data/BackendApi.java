@@ -6,6 +6,7 @@ import android.os.Looper;
 import com.example.myapplication.auth.SessionManager;
 import com.example.myapplication.model.Category;
 import com.example.myapplication.model.Product;
+import com.example.myapplication.model.Order;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -83,6 +84,50 @@ public final class BackendApi {
             }
             return products;
         }, callback);
+    }
+
+    /** Loads real orders for the authenticated administrator. */
+    public void getAdminOrders(Callback<List<Order>> callback) {
+        request("GET", "orders/admin", null, body -> {
+            JSONArray array = new JSONArray(body);
+            List<Order> orders = new ArrayList<>();
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject item = array.getJSONObject(i);
+                JSONArray lines = item.optJSONArray("items");
+                List<Order.Item> orderItems = new ArrayList<>();
+                int subtotal = 0;
+                if (lines != null) for (int j = 0; j < lines.length(); j++) {
+                    JSONObject line = lines.optJSONObject(j);
+                    if (line == null) continue;
+                    int quantity = line.optInt("quantity");
+                    int unitPrice = (int) Math.round(line.optDouble("unitPrice"));
+                    if (quantity < 1) continue;
+                    orderItems.add(new Order.Item(line.optString("productName", "Sản phẩm"), quantity, unitPrice));
+                    subtotal += (int) Math.round(line.optDouble("lineTotal", (double) quantity * unitPrice));
+                }
+                int total = (int) Math.round(item.optDouble("totalAmount"));
+                int deliveryFee = Math.max(0, total - subtotal);
+                String status = displayOrderStatus(item.optString("status", "PENDING"));
+                orders.add(new Order("#" + item.optLong("id"),
+                        item.optString("customerName", "Khách hàng"),
+                        "", item.optString("createdAt", ""), status,
+                        "Thông tin nhận hàng", "Backend chưa cung cấp địa chỉ giao hàng",
+                        "Chưa có thông tin thanh toán", "", deliveryFee,
+                        orderItems.toArray(new Order.Item[0])));
+            }
+            return orders;
+        }, callback);
+    }
+
+    private static String displayOrderStatus(String status) {
+        switch (status) {
+            case "PENDING": return "Chờ xác nhận";
+            case "CONFIRMED": return "Đã xác nhận";
+            case "PREPARING": return "Đang chuẩn bị";
+            case "COMPLETED": return "Hoàn thành";
+            case "CANCELLED": return "Đã hủy";
+            default: return status;
+        }
     }
 
     public void createCategory(String code, String name, String description, Callback<Category> callback) {

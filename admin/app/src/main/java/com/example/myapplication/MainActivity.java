@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity
         if (!requireLogin()) return;
         showingOrderDetail = false;
         backCallback.setEnabled(true);
-        new OrderScreen(this, this).show();
+        new OrderScreen(this, this, backendApi).show();
     }
 
     @Override
