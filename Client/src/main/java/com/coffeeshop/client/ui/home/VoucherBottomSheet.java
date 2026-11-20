@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.coffeeshop.client.R;
+import com.coffeeshop.client.catalog.ui.ProductListActivity;
 import com.coffeeshop.client.data.VoucherRepository;
 import com.coffeeshop.client.model.Voucher;
 import com.coffeeshop.client.model.VoucherStatus;
@@ -72,7 +73,7 @@ public class VoucherBottomSheet extends BottomSheetDialogFragment {
                 VoucherRepository.setSelectedVoucherCode(getContext(), voucher.code);
                 Toast.makeText(getContext(), "Mã " + voucher.code + " sẽ được áp dụng ở bước thanh toán", Toast.LENGTH_LONG).show();
                 dismiss();
-                startActivity(new Intent(getContext(), MenuActivity.class));
+                startActivity(new Intent(getContext(), ProductListActivity.class));
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

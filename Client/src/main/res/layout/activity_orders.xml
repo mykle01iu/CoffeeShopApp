@@ -82,43 +82,6 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <ProgressBar
-            android:id="@+id/ordersLoading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/ordersErrorView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="32dp"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/ordersErrorMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/coffee_text"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/ordersRetryButton"
-                android:layout_width="wrap_content"
-                android:layout_height="52dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/bg_primary_button"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:text="Thử lại"
-                android:textAllCaps="false"
-                android:textColor="@color/coffee_surface" />
-        </LinearLayout>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ordersRecyclerView"
             android:layout_width="match_parent"

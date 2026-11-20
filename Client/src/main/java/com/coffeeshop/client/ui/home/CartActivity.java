@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.coffeeshop.client.R;
 import com.coffeeshop.client.catalog.model.Product;
+import com.coffeeshop.client.catalog.ui.ProductListActivity;
 import com.coffeeshop.client.data.CartRepository;
 import com.google.android.material.snackbar.Snackbar;
 import com.coffeeshop.client.model.CartItem;
@@ -52,7 +53,7 @@ public class CartActivity extends Activity {
         subtotalText = findViewById(R.id.cartSubtotalText);
 
         findViewById(R.id.btnBrowseMenu).setOnClickListener(v -> {
-            startActivity(new Intent(this, MenuActivity.class));
+            startActivity(new Intent(this, ProductListActivity.class));
             finish();
         });
 
@@ -150,12 +151,7 @@ public class CartActivity extends Activity {
             h.name.setText(p.name);
             h.price.setText(h.itemView.getContext().getString(R.string.money_vnd,NumberFormat.getIntegerInstance(new Locale("vi", "VN")).format(item.getLineTotal())));
             h.qty.setText(String.valueOf(item.quantity));
-            if (p.imageUrl != null && !p.imageUrl.trim().isEmpty()) {
-                com.bumptech.glide.Glide.with(h.image).load(p.imageUrl)
-                        .placeholder(p.imageRes).error(p.imageRes).into(h.image);
-            } else {
-                h.image.setImageResource(p.imageRes);
-            }
+            h.image.setImageResource(p.imageRes);
             String summary=item.getOptionSummary(h.itemView.getContext());h.options.setText(summary);h.options.setVisibility(summary.isEmpty()?View.GONE:View.VISIBLE);
             h.note.setText(h.itemView.getContext().getString(R.string.cart_note_format,item.options.note));h.note.setVisibility(item.options.note.isEmpty()?View.GONE:View.VISIBLE);
 

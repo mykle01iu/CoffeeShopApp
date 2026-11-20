@@ -17,9 +17,9 @@ import com.coffeeshop.client.data.PointsRepository;
 import com.coffeeshop.client.data.UserRepository;
 import com.coffeeshop.client.data.VoucherRepository;
 import com.coffeeshop.client.model.UserProfile;
+import com.coffeeshop.client.ui.auth.AuthChoiceActivity;
 import com.coffeeshop.client.ui.auth.LoginActivity;
 import com.coffeeshop.client.ui.auth.LocalAuthRepository;
-import com.coffeeshop.client.data.auth.TokenManager;
 import com.coffeeshop.client.ui.common.FontUtils;
 import com.coffeeshop.client.ui.common.SystemInsets;
 
@@ -58,8 +58,7 @@ public class ProfileActivity extends AppCompatActivity {
         findViewById(R.id.profileAddressRow).setOnClickListener(view ->
                 startActivity(new Intent(this, AddressActivity.class)));
 
-        findViewById(R.id.profilePaymentMethodRow).setOnClickListener(view ->
-                startActivity(new Intent(this, PaymentMethodsActivity.class)));
+        findViewById(R.id.profilePaymentMethodRow).setOnClickListener(view -> showComingSoonToast("Phương thức thanh toán"));
 
         findViewById(R.id.profileReferralRow).setOnClickListener(view ->
                 startActivity(new Intent(this, ReferralActivity.class)));
@@ -92,12 +91,12 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void renderProfile() {
-        TokenManager tokenManager = TokenManager.getInstance(this);
-        boolean loggedIn = !tokenManager.getToken().isEmpty();
+        boolean loggedIn = LocalAuthRepository.hasActiveSession(this);
         UserProfile user = UserRepository.getProfile(this);
 
-        String identifierValue = loggedIn ? tokenManager.getEmail() : "";
-        String nameValue = loggedIn ? tokenManager.getName() : user.name;
+        String savedIdentifier = LocalAuthRepository.getLastRegisteredIdentifier(this);
+        String identifierValue = loggedIn ? LocalAuthRepository.getSessionIdentifier(this) : (savedIdentifier.isEmpty() ? user.phone : savedIdentifier);
+        String nameValue = loggedIn ? LocalAuthRepository.getSessionName(this) : user.name;
         if (nameValue.isEmpty()) nameValue = user.name;
         if (identifierValue.isEmpty()) identifierValue = user.phone;
 
@@ -174,10 +173,6 @@ public class ProfileActivity extends AppCompatActivity {
                 .setMessage("Bạn có chắc chắn muốn đăng xuất khỏi tài khoản không?")
                 .setPositiveButton("Đăng xuất", (dialog, which) -> {
                     LocalAuthRepository.logout(this);
-                    TokenManager.getInstance(this).clear();
-                    startActivity(new Intent(this, LoginActivity.class)
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                    finish();
                     renderProfile();
                     Toast.makeText(this, "Đã đăng xuất tài khoản thành công.", Toast.LENGTH_SHORT).show();
                 })
@@ -186,6 +181,13 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void openAccountSignIn() {
-        startActivity(new Intent(this, LoginActivity.class));
+        if (!LocalAuthRepository.getLastRegisteredIdentifier(this).isEmpty()) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra(LocalAuthRepository.EXTRA_IDENTIFIER,
+                    LocalAuthRepository.getLastRegisteredIdentifier(this));
+            startActivity(intent);
+        } else {
+            startActivity(new Intent(this, AuthChoiceActivity.class));
+        }
     }
 }

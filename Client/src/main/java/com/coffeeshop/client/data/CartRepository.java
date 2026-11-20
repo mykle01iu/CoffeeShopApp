@@ -2,11 +2,8 @@ package com.coffeeshop.client.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import com.coffeeshop.client.R;
 import com.coffeeshop.client.catalog.data.ProductRepository;
 import com.coffeeshop.client.catalog.model.Product;
-import com.coffeeshop.client.data.remote.dto.ProductDto;
 import com.coffeeshop.client.model.*;
 import com.coffeeshop.client.ui.home.CartOptions;
 import com.coffeeshop.client.ui.home.DrinkProduct;
@@ -16,33 +13,17 @@ import org.json.JSONObject;
 import java.util.*;
 
 public final class CartRepository {
-    private static final String PREF_NAME="moc_mien_cart", LINE="line_", META="line_meta_", PRODUCT_META="product_meta_";
+    private static final String PREF_NAME="moc_mien_cart", LINE="line_", META="line_meta_";
     private CartRepository(){}
     private static SharedPreferences prefs(Context c){SharedPreferences sp=c.getApplicationContext().getSharedPreferences(PREF_NAME,Context.MODE_PRIVATE);migrateHomeCart(c,sp);return sp;}
     private static synchronized void migrateHomeCart(Context c,SharedPreferences cart){SharedPreferences home=c.getApplicationContext().getSharedPreferences("moc_mien_home",Context.MODE_PRIVATE);SharedPreferences.Editor into=cart.edit(),out=home.edit();boolean changed=false;for(Map.Entry<String,?> e:home.getAll().entrySet()){String k=e.getKey();if((k.startsWith("cart_item_")||k.startsWith("cart_")||k.startsWith("qty_"))&&e.getValue() instanceof Integer){int q=(Integer)e.getValue();if(q>0)into.putInt(k,cart.getInt(k,0)+q);out.remove(k);changed=true;}}if(changed){into.apply();out.apply();}}
     public static SharedPreferences getCartPreferences(Context c){return c==null?null:prefs(c);}
 
-    public static synchronized void add(Context c,Product p,SelectedOptions options,int quantity){if(c==null||p==null||quantity<=0)return;SharedPreferences sp=prefs(c);SelectedOptions o=options==null?SelectedOptions.defaults():options;String k=lineKey(p.id,o);int n=sp.getInt(k,0)+quantity;sp.edit().putInt(k,n).putString(META+p.id+"_"+o.optionsHash(),serialize(o)).putString(PRODUCT_META+p.id,serializeProduct(p)).apply();}
-    public static synchronized boolean addRemote(Context c, ProductDto remote, SelectedOptions options, int quantity) {
-        if (remote == null || remote.getId() == null || remote.getId() < 1 || remote.getId() > Integer.MAX_VALUE) return false;
-        Product p = new Product(
-                remote.getId().intValue(),
-                remote.getName() == null ? "" : remote.getName(),
-                remote.getCategory() == null ? "" : remote.getCategory(),
-                remote.getPrice() == null ? 0 : (int) Math.round(remote.getPrice()),
-                0f,
-                0,
-                remote.getDescription() == null ? "" : remote.getDescription(),
-                R.drawable.logo_moc_mien_icon,
-                remote.getImageUrl()
-        );
-        add(c, p, options, quantity);
-        return true;
-    }
+    public static synchronized void add(Context c,Product p,SelectedOptions options,int quantity){if(c==null||p==null||quantity<=0)return;SharedPreferences sp=prefs(c);SelectedOptions o=options==null?SelectedOptions.defaults():options;String k=lineKey(p.id,o);int n=sp.getInt(k,0)+quantity;sp.edit().putInt(k,n).putString(META+p.id+"_"+o.optionsHash(),serialize(o)).apply();}
     public static void add(Context c,Product p){if(p!=null)add(c,p,OptionsConfig.forProduct(p).defaults(c),1);}
     public static void addSelection(Context c,DrinkProduct dp,CartOptions.Selection s){if(c==null||dp==null)return;Product p=findByStringId(dp.id);if(p==null)return; add(c,p,fromLegacySelection(c,p,s),1);}
     public static synchronized void update(Context c,CartItem old,SelectedOptions next,int quantity){if(c==null||old==null)return;remove(c,old);if(quantity>0)add(c,old.product,next,quantity);}
-    public static synchronized List<CartItem> getItems(Context c){if(c==null)return Collections.emptyList();SharedPreferences sp=prefs(c);migrateLegacy(c,sp);Map<Integer,Product> products=new LinkedHashMap<>();for(Product p:ProductRepository.getProducts())products.put(p.id,p);for(String key:sp.getAll().keySet())if(key.startsWith(PRODUCT_META)){Product p=deserializeProduct(sp.getString(key,null));if(p!=null)products.put(p.id,p);}List<CartItem> out=new ArrayList<>();for(String key:sp.getAll().keySet()){if(!key.startsWith(LINE))continue;String tail=key.substring(LINE.length());int split=tail.indexOf('_');if(split<=0)continue;try{int id=Integer.parseInt(tail.substring(0,split));int hash=Integer.parseInt(tail.substring(split+1));Product p=products.get(id);int qty=sp.getInt(key,0);if(p==null||qty<=0)continue;SelectedOptions o=deserialize(sp.getString(META+id+"_"+hash,null));if(o==null)o=OptionsConfig.forProduct(p).defaults(c);out.add(new CartItem(p,o,qty));}catch(Exception ignored){}}return Collections.unmodifiableList(out);}
+    public static synchronized List<CartItem> getItems(Context c){if(c==null)return Collections.emptyList();SharedPreferences sp=prefs(c);migrateLegacy(c,sp);List<CartItem> out=new ArrayList<>();for(Product p:ProductRepository.getProducts())for(String k:sp.getAll().keySet())if(k.startsWith(LINE+p.id+"_")){int qty=sp.getInt(k,0);if(qty<=0)continue;int hash;try{hash=Integer.parseInt(k.substring((LINE+p.id+"_").length()));}catch(Exception e){continue;}SelectedOptions o=deserialize(sp.getString(META+p.id+"_"+hash,null));if(o==null)o=OptionsConfig.forProduct(p).defaults(c);out.add(new CartItem(p,o,qty));}return Collections.unmodifiableList(out);}
     public static synchronized void increase(Context c,CartItem item){setQuantity(c,item,item==null?0:item.quantity+1);}
     public static synchronized void decrease(Context c,CartItem item){setQuantity(c,item,item==null?0:item.quantity-1);}
     public static synchronized void setQuantity(Context c,CartItem item,int q){if(c==null||item==null)return;SharedPreferences sp=prefs(c);String k=lineKey(item.product.id,item.options);if(q<=0)sp.edit().remove(k).remove(META+item.product.id+"_"+item.options.optionsHash()).apply();else sp.edit().putInt(k,q).apply();}
@@ -51,7 +32,7 @@ public final class CartRepository {
     public static void increase(Context c,int id){CartItem i=findFirst(c,id);if(i!=null)increase(c,i);}
     public static void decrease(Context c,int id){CartItem i=findFirst(c,id);if(i!=null)decrease(c,i);}
     public static void remove(Context c,int id){for(CartItem i:new ArrayList<>(getItems(c)))if(i.product.id==id)remove(c,i);}
-    public static synchronized void clear(Context c){if(c==null)return;SharedPreferences sp=prefs(c);SharedPreferences.Editor e=sp.edit();for(String k:sp.getAll().keySet())if(k.startsWith(LINE)||k.startsWith(META)||k.startsWith(PRODUCT_META)||k.startsWith("cart_item_")||k.startsWith("cart_")||k.startsWith("qty_"))e.remove(k);e.apply();}
+    public static synchronized void clear(Context c){if(c==null)return;SharedPreferences sp=prefs(c);SharedPreferences.Editor e=sp.edit();for(String k:sp.getAll().keySet())if(k.startsWith(LINE)||k.startsWith(META)||k.startsWith("cart_item_")||k.startsWith("cart_")||k.startsWith("qty_"))e.remove(k);e.apply();}
     public static int subtotal(Context c){int n=0;for(CartItem i:getItems(c))n+=i.getLineTotal();return n;}
     public static int totalQuantity(Context c){int n=0;for(CartItem i:getItems(c))n+=i.quantity;return n;}
     private static String lineKey(int id,SelectedOptions o){return LINE+id+"_"+o.optionsHash();}
@@ -59,8 +40,6 @@ public final class CartRepository {
     private static Product findByStringId(String id){List<DrinkProduct> ds=MenuCatalog.getProducts();List<Product> ps=ProductRepository.getProducts();for(int i=0;i<ds.size()&&i<ps.size();i++)if(ds.get(i).id.equals(id))return ps.get(i);return null;}
     private static SelectedOptions fromLegacySelection(Context c,Product p,CartOptions.Selection s){if(s==null)return OptionsConfig.forProduct(p).defaults(c);OptionsConfig config=OptionsConfig.forProduct(p);Size size=Size.S;try{size=Size.valueOf(s.size);}catch(Exception ignored){}SugarLevel sugar=SugarLevel.HUNDRED;try{sugar=SugarLevel.valueOf(s.sugar);}catch(Exception ignored){if("50".equals(s.sugar))sugar=SugarLevel.FIFTY;else if("70".equals(s.sugar))sugar=SugarLevel.SEVENTY;else if("0".equals(s.sugar))sugar=SugarLevel.ZERO;}IceLevel ice=IceLevel.NORMAL;if("less".equals(s.ice))ice=IceLevel.LESS;else if("none".equals(s.ice))ice=IceLevel.NONE;Set<String> ids=new HashSet<>();for(String t:s.toppings.split(",")){if("salt".equals(t))ids.add("cheese");else if("espresso".equals(t))ids.add(t);else if("pearls".equals(t))ids.add(t);}return new SelectedOptions(config.size?size:null,config.sugar?sugar:null,config.ice?ice:null,OptionsConfig.toppings(p,ids,c),false,"");}
     private static String serialize(SelectedOptions o){try{JSONObject j=new JSONObject();j.put("size",o.size==null?"":o.size.name());j.put("sugar",o.sugar==null?"":o.sugar.name());j.put("ice",o.ice==null?"":o.ice.name());j.put("warm",o.warmUp);j.put("note",o.note);JSONArray a=new JSONArray();for(Topping t:o.toppings){JSONObject x=new JSONObject();x.put("id",t.id);x.put("name",t.name);x.put("price",t.price);a.put(x);}j.put("toppings",a);return j.toString();}catch(Exception e){return "";}}
-    private static String serializeProduct(Product p){try{JSONObject j=new JSONObject();j.put("id",p.id);j.put("name",p.name);j.put("category",p.category);j.put("price",p.price);j.put("rating",p.rating);j.put("reviewCount",p.reviewCount);j.put("description",p.description);j.put("imageRes",p.imageRes);j.put("imageUrl",p.imageUrl);return j.toString();}catch(Exception e){return "";}}
-    private static Product deserializeProduct(String raw){if(raw==null)return null;try{JSONObject j=new JSONObject(raw);return new Product(j.getInt("id"),j.optString("name"),j.optString("category"),j.optInt("price"), (float)j.optDouble("rating"),j.optInt("reviewCount"),j.optString("description"),j.optInt("imageRes"),j.optString("imageUrl",null));}catch(Exception e){return null;}}
     private static SelectedOptions deserialize(String raw){if(raw==null)return null;try{JSONObject j=new JSONObject(raw);Size s=j.optString("size").isEmpty()?null:Size.valueOf(j.getString("size"));SugarLevel g=j.optString("sugar").isEmpty()?null:SugarLevel.valueOf(j.getString("sugar"));IceLevel i=j.optString("ice").isEmpty()?null:IceLevel.valueOf(j.getString("ice"));List<Topping> ts=new ArrayList<>();JSONArray a=j.optJSONArray("toppings");if(a!=null)for(int x=0;x<a.length();x++){JSONObject t=a.getJSONObject(x);ts.add(new Topping(t.getString("id"),t.getString("name"),t.getInt("price")));}return new SelectedOptions(s,g,i,ts,j.optBoolean("warm"),j.optString("note"));}catch(Exception e){return null;}}
     private static synchronized void migrateLegacy(Context c,SharedPreferences sp){SharedPreferences.Editor e=sp.edit();boolean changed=false;Map<String,?> all=new HashMap<>(sp.getAll());List<Product> products=ProductRepository.getProducts();List<DrinkProduct> drinks=MenuCatalog.getProducts();for(Map.Entry<String,?> entry:all.entrySet()){String key=entry.getKey();if(!(entry.getValue() instanceof Integer)||((Integer)entry.getValue())<=0||key.startsWith(LINE)||key.startsWith(META))continue;int id=-1;SelectedOptions options=null;String token=null;
       if(key.startsWith("qty_")){try{id=Integer.parseInt(key.substring(4));}catch(Exception ignored){}}

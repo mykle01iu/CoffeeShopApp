@@ -193,38 +193,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="18dp"
                         android:gravity="center_vertical"
-                        android:text="Đăng ký bằng"
+                        android:text="Email"
                         android:textColor="@color/coffee_text"
                         android:textSize="12sp"
                         android:textStyle="bold" />
-
-                    <RadioGroup
-                        android:id="@+id/registerMethodGroup"
-                        android:layout_width="match_parent"
-                        android:layout_height="44dp"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:id="@+id/registerEmailMethod"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:checked="true"
-                            android:text="Email" />
-
-                        <RadioButton
-                            android:id="@+id/registerPhoneMethod"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="20dp"
-                            android:text="Số điện thoại" />
-                    </RadioGroup>
 
                     <EditText
                         android:id="@+id/registerEmailInput"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:layout_marginTop="8dp"
-                        android:autofillHints="emailAddress"
+                        android:autofillHints="emailAddress,phone"
                         android:background="@drawable/bg_input"
                         android:drawableStart="@drawable/ic_search"
                         android:drawablePadding="10dp"

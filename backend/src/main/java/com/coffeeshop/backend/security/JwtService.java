@@ -31,7 +31,7 @@ public class JwtService {
                 new Date(now.getTime() + jwtExpiration);
 
         return Jwts.builder()
-                .subject(user.getEmail() != null ? user.getEmail() : user.getPhone())
+                .subject(user.getEmail())
                 .claim("userId", user.getId())
                 .claim("name", user.getName())
                 .claim("role", user.getRole().name())

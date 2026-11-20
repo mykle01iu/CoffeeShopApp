@@ -1,8 +1,6 @@
 .idea/
 *.iml
 .gradle/
-.gradle-cache/
-.android-user/
 **/build/
 .externalNativeBuild/
 .cxx/

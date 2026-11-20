@@ -37,7 +37,6 @@ public class AuthController {
             response.put("id", user.getId());
             response.put("name", user.getName());
             response.put("email", user.getEmail());
-            response.put("phone", user.getPhone());
             response.put("role", user.getRole());
 
             return ResponseEntity.ok(response);
@@ -62,8 +61,7 @@ public class AuthController {
                     token,
                     user.getName(),
                     user.getEmail(),
-                    user.getRole().name(),
-                    user.getPhone()
+                    user.getRole().name()
             );
 
             return ResponseEntity.ok(response);

@@ -58,20 +58,10 @@ public final class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Pr
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = products.get(position);
-        com.bumptech.glide.Glide.with(holder.image).clear(holder.image);
         holder.image.setImageResource(product.getImageRes());
-        if (product.getImageUrl() != null && !product.getImageUrl().trim().isEmpty()) {
-            com.bumptech.glide.Glide.with(holder.image).load(product.getImageUrl())
-                    .placeholder(product.getImageRes()).error(product.getImageRes()).into(holder.image);
-        }
         holder.image.setContentDescription(product.getName());
-        if (product.getRating() > 0) {
-            holder.rating.setText(holder.itemView.getContext().getString(
-                    R.string.home_rating_format, product.getRating()));
-            holder.rating.setVisibility(View.VISIBLE);
-        } else {
-            holder.rating.setVisibility(View.GONE);
-        }
+        holder.rating.setText(holder.itemView.getContext().getString(
+                R.string.home_rating_format, product.getRating()));
         holder.name.setText(product.getName());
         holder.name.setTypeface(FontUtils.inter(holder.itemView.getContext(), 600));
         holder.description.setText(product.getDescription());

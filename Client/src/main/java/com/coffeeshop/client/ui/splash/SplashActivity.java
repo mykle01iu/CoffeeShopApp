@@ -14,25 +14,18 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.coffeeshop.client.R;
-import com.coffeeshop.client.data.auth.TokenManager;
-import com.coffeeshop.client.ui.auth.LoginActivity;
+import com.coffeeshop.client.ui.auth.AuthChoiceActivity;
 import com.coffeeshop.client.ui.common.FontUtils;
 import com.coffeeshop.client.ui.common.SystemInsets;
-import com.coffeeshop.client.ui.home.MenuActivity;
 
 public class SplashActivity extends Activity {
     private static final long MIN_SPLASH_MILLIS = 2100L;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private long splashStartTime;
     private boolean initializationComplete;
-    private boolean transitionStarted;
     private final Runnable openWelcome = () -> {
-        if (transitionStarted || isFinishing() || isDestroyed()) return;
-        transitionStarted = true;
-        Class<?> destination = TokenManager.getInstance(this).getToken().isEmpty()
-                ? LoginActivity.class : MenuActivity.class;
-        startActivity(new Intent(this, destination)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+        if (isFinishing() || isDestroyed()) return;
+        startActivity(new Intent(this, AuthChoiceActivity.class));
         finish();
     };
 
@@ -67,7 +60,7 @@ public class SplashActivity extends Activity {
     }
 
     private void scheduleWelcomeWhenReady() {
-        if (!initializationComplete || transitionStarted || isFinishing() || isDestroyed()) return;
+        if (!initializationComplete || isFinishing() || isDestroyed()) return;
         long minimumDuration = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
                 && !ValueAnimator.areAnimatorsEnabled() ? 0L : MIN_SPLASH_MILLIS;
         long remaining = minimumDuration - (SystemClock.uptimeMillis() - splashStartTime);

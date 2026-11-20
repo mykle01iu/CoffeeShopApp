@@ -1,11 +1,12 @@
 package com.coffeeshop.client.ui.home;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,46 +18,30 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.lifecycle.ViewModelProvider;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.bumptech.glide.Glide;
 import com.coffeeshop.client.R;
-import com.coffeeshop.client.catalog.model.Product;
+import com.coffeeshop.client.data.CartManager;
 import com.coffeeshop.client.data.CartRepository;
-import com.coffeeshop.client.data.auth.TokenManager;
-import com.coffeeshop.client.data.remote.ApiResult;
-import com.coffeeshop.client.data.remote.dto.CategoryDto;
-import com.coffeeshop.client.data.remote.dto.ProductDto;
-import com.coffeeshop.client.model.SelectedOptions;
-import com.coffeeshop.client.ui.auth.LoginActivity;
 import com.coffeeshop.client.ui.common.FontUtils;
 import com.coffeeshop.client.ui.common.SystemInsets;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.text.Normalizer;
-import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
-public class MenuActivity extends AppCompatActivity {
-    private final List<CategoryDto> categories = new ArrayList<>();
-    private final List<ProductDto> products = new ArrayList<>();
-    private MenuViewModel viewModel;
+public class MenuActivity extends Activity {
+    private final List<DrinkProduct> products = MenuCatalog.getProducts();
+    private final Map<String, Boolean> favorites = new LinkedHashMap<>();
+    private final Map<String, Integer> cart = new LinkedHashMap<>();
+    private SharedPreferences preferences;
+    private SharedPreferences cartPreferences;
     private LinearLayout productRows;
-    private LinearLayout categoryContainer;
-    private View loadingState;
-    private View errorState;
-    private TextView errorMessage;
     private TextView resultCount;
     private TextView emptyState;
+    private String category = "all";
     private TextView selectedChip;
-    private String selectedCategoryCode;
-    private String categoryError;
-    private boolean categoryLoadFailed;
-    private String query = "";
-    private int productRequestState = ApiResult.Status.LOADING.ordinal();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,143 +49,68 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
         SystemInsets.apply(this);
         FontUtils.applyInter(findViewById(android.R.id.content));
-        TextView title = findViewById(R.id.menuTitle);
-        title.setFocusable(true);
-        title.setTypeface(FontUtils.lora(this, 500));
-
-        categoryContainer = findViewById(R.id.menuCategoryContainer);
+        findViewById(R.id.menuTitle).setFocusable(true);
+        ((TextView) findViewById(R.id.menuTitle)).setTypeface(FontUtils.lora(this, 500));
+        findViewById(R.id.openCatalogList).setOnClickListener(view ->
+                startActivity(new Intent(this, com.coffeeshop.client.catalog.ui.ProductListActivity.class)));
+        preferences = getSharedPreferences("moc_mien_home", MODE_PRIVATE);
+        cartPreferences = CartRepository.getCartPreferences(this);
         productRows = findViewById(R.id.menuProductRows);
         resultCount = findViewById(R.id.menuResultCount);
         emptyState = findViewById(R.id.menuEmptyState);
-        loadingState = findViewById(R.id.menuLoadingState);
-        errorState = findViewById(R.id.menuErrorState);
-        errorMessage = findViewById(R.id.menuErrorMessage);
-        productRows.setVisibility(View.GONE);
-        emptyState.setVisibility(View.GONE);
-
-        findViewById(R.id.menuLogoutButton).setOnClickListener(view -> confirmLogout());
-        findViewById(R.id.menuCartButton).setOnClickListener(view ->
-                startActivity(new Intent(this, CartActivity.class)));
-        findViewById(R.id.menuRetryButton).setOnClickListener(view -> retryLoading());
-        setupSearch();
-        setupNavigation();
-
-        viewModel = new ViewModelProvider(this).get(MenuViewModel.class);
-        viewModel.getCategories().observe(this, this::onCategoriesResult);
-        viewModel.getProducts().observe(this, this::onProductsResult);
-        retryLoading();
-    }
-
-    private void retryLoading() {
-        categoryError = null;
-        categoryLoadFailed = false;
-        errorState.setVisibility(View.GONE);
-        viewModel.loadCategories();
-        viewModel.loadProducts(selectedCategoryCode);
-    }
-
-    private void onCategoriesResult(ApiResult<List<CategoryDto>> result) {
-        if (result == null || result.status == ApiResult.Status.LOADING) return;
-        if (result.status == ApiResult.Status.ERROR) {
-            categoryLoadFailed = true;
-            categoryError = result.message;
-            categories.clear();
-            createCategories();
-            showError(result.message);
-            return;
-        }
-        categoryLoadFailed = false;
-        categoryError = null;
-        categories.clear();
-        if (result.data != null) {
-            for (CategoryDto category : result.data) {
-                if (category != null && !Boolean.FALSE.equals(category.available)) categories.add(category);
-            }
-        }
+        loadState();
         createCategories();
+        setupSearch();
+        renderProducts("");
+        setupNavigation();
     }
 
-    private void onProductsResult(ApiResult<List<ProductDto>> result) {
-        if (result == null) return;
-        if (result.status == ApiResult.Status.LOADING) {
-            productRequestState = ApiResult.Status.LOADING.ordinal();
-            loadingState.setVisibility(View.VISIBLE);
-            errorState.setVisibility(View.GONE);
-            productRows.setVisibility(View.GONE);
-            emptyState.setVisibility(View.GONE);
-            return;
-        }
-        loadingState.setVisibility(View.GONE);
-        if (result.status == ApiResult.Status.ERROR) {
-            productRequestState = ApiResult.Status.ERROR.ordinal();
-            showError(result.message);
-            return;
-        }
-        productRequestState = ApiResult.Status.SUCCESS.ordinal();
-        if (categoryLoadFailed) showCategoryWarning();
-        else errorState.setVisibility(View.GONE);
-        products.clear();
-        if (result.data != null) {
-            for (ProductDto product : result.data) {
-                if (product != null && !Boolean.FALSE.equals(product.available)) products.add(product);
+    private void loadState() {
+        CartOptions.migrateOldCart(cartPreferences, products);
+        for (DrinkProduct product : products) {
+            favorites.put(product.id, preferences.getBoolean("favorite_" + product.id, false));
+            for (CartOptions.Selection option : CartOptions.selections(cartPreferences, product)) {
+                cart.put(product.id + "|" + option.token(), option.quantity);
             }
         }
-        renderProducts();
-    }
-
-    private void showError(String message) {
-        loadingState.setVisibility(View.GONE);
-        productRows.setVisibility(View.GONE);
-        emptyState.setVisibility(View.GONE);
-        errorMessage.setText(message == null || message.trim().isEmpty()
-                ? "Không tải được thực đơn. Vui lòng thử lại." : message);
-        errorState.setVisibility(View.VISIBLE);
-    }
-
-    private void showCategoryWarning() {
-        errorMessage.setText(categoryError == null || categoryError.trim().isEmpty()
-                ? "Không tải được danh mục. Vui lòng thử lại." : categoryError);
-        errorState.setVisibility(View.VISIBLE);
     }
 
     private void createCategories() {
-        categoryContainer.removeAllViews();
-        addCategoryChip(getString(R.string.category_all), null);
-        for (CategoryDto category : categories) {
-            if (category.code != null && !category.code.trim().isEmpty()) {
-                addCategoryChip(category.name == null ? category.code : category.name, category.code);
-            }
+        LinearLayout container = findViewById(R.id.menuCategoryContainer);
+        String[] keys = {"all", "coffee", "tea", "smoothie", "latte", "snack"};
+        int[] labels = {R.string.category_all, R.string.category_coffee, R.string.category_tea,
+                R.string.category_smoothie, R.string.category_latte, R.string.category_snacks};
+        for (int i = 0; i < keys.length; i++) {
+            TextView chip = new TextView(this);
+            chip.setText(labels[i]);
+            chip.setTextSize(13);
+            chip.setTypeface(FontUtils.inter(this, 600));
+            chip.setGravity(android.view.Gravity.CENTER);
+            chip.setPadding(dp(16), 0, dp(16), 0);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, dp(40));
+            params.setMarginEnd(dp(8));
+            container.addView(chip, params);
+            String key = keys[i];
+            chip.setOnClickListener(view -> selectCategory(key, chip));
+            if (i == 0) selectedChip = chip;
         }
         updateChipStyles();
     }
 
-    private void addCategoryChip(String label, String code) {
-        TextView chip = new TextView(this);
-        chip.setText(label);
-        chip.setTextSize(13);
-        chip.setTypeface(FontUtils.inter(this, 600));
-        chip.setGravity(Gravity.CENTER);
-        chip.setPadding(dp(16), 0, dp(16), 0);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, dp(40));
-        params.setMarginEnd(dp(8));
-        categoryContainer.addView(chip, params);
-        if ((selectedCategoryCode == null && code == null)
-                || (selectedCategoryCode != null && selectedCategoryCode.equals(code))) selectedChip = chip;
-        chip.setOnClickListener(view -> {
-            selectedCategoryCode = code;
-            selectedChip = chip;
-            updateChipStyles();
-            viewModel.loadProducts(code);
-        });
+    private void selectCategory(String value, TextView chip) {
+        category = value;
+        selectedChip = chip;
+        updateChipStyles();
+        renderProducts(currentQuery());
     }
 
     private void updateChipStyles() {
-        for (int i = 0; i < categoryContainer.getChildCount(); i++) {
-            TextView chip = (TextView) categoryContainer.getChildAt(i);
+        LinearLayout container = findViewById(R.id.menuCategoryContainer);
+        for (int i = 0; i < container.getChildCount(); i++) {
+            TextView chip = (TextView) container.getChildAt(i);
             boolean active = chip == selectedChip;
-            chip.setBackgroundResource(active
-                    ? R.drawable.bg_category_chip_selected : R.drawable.bg_category_chip);
+            chip.setBackgroundResource(active ? R.drawable.bg_category_chip_selected : R.drawable.bg_category_chip);
             chip.setTextColor(getColor(active ? R.color.coffee_surface : R.color.coffee_muted));
         }
     }
@@ -209,25 +119,27 @@ public class MenuActivity extends AppCompatActivity {
         EditText input = findViewById(R.id.menuSearchInput);
         input.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                query = s.toString();
-                if (productRequestState == ApiResult.Status.SUCCESS.ordinal()) renderProducts();
-            }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { renderProducts(s.toString()); }
             @Override public void afterTextChanged(Editable s) { }
         });
     }
 
-    private void renderProducts() {
+    private String currentQuery() {
+        return ((EditText) findViewById(R.id.menuSearchInput)).getText().toString();
+    }
+
+    private void renderProducts(String query) {
         String normalized = normalize(query);
-        List<ProductDto> visible = new ArrayList<>();
-        for (ProductDto product : products) {
-            if (normalized.isEmpty() || normalize(product.name).contains(normalized)
-                    || normalize(product.description).contains(normalized)) visible.add(product);
+        List<DrinkProduct> visible = new ArrayList<>();
+        for (DrinkProduct product : products) {
+            boolean matchesCategory = category.equals("all") || product.category.equals(category);
+            boolean matchesQuery = normalized.isEmpty() || normalize(product.name).contains(normalized)
+                    || normalize(product.description).contains(normalized);
+            if (matchesCategory && matchesQuery) visible.add(product);
         }
         productRows.removeAllViews();
         float density = getResources().getDisplayMetrics().density;
-        int screenWidthDp = Math.round(getResources().getDisplayMetrics().widthPixels / density);
-        int cardWidth = dp((screenWidthDp - 60) / 2);
+        int cardWidth = Math.round((getResources().getDisplayMetrics().widthPixels / density - 60f) / 2f * density);
         for (int i = 0; i < visible.size(); i += 2) {
             LinearLayout row = new LinearLayout(this);
             row.setOrientation(LinearLayout.HORIZONTAL);
@@ -245,135 +157,96 @@ public class MenuActivity extends AppCompatActivity {
         emptyState.setText(normalized.isEmpty() ? R.string.home_category_empty : R.string.home_search_empty);
     }
 
-    private void bindCard(LinearLayout row, ProductDto product, int width) {
+    private void bindCard(LinearLayout row, DrinkProduct product, int width) {
         View card = LayoutInflater.from(this).inflate(R.layout.item_drink, row, false);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
         if (row.getChildCount() == 0) params.setMarginEnd(dp(12));
         row.addView(card, params);
-
-        ImageView image = card.findViewById(R.id.drinkImage);
-        image.setContentDescription(product.name);
-
-        int localRes = getProductImageResource(product.name);
-        if (localRes != 0) {
-            image.setImageResource(localRes);
-        } else if (product.imageUrl != null && !product.imageUrl.trim().isEmpty()) {
-            Glide.with(this).load(product.imageUrl)
-                    .placeholder(R.drawable.logo_moc_mien_icon)
-                    .error(R.drawable.logo_moc_mien_icon)
-                    .into(image);
-        } else {
-            image.setImageResource(R.drawable.logo_moc_mien_icon);
-        }
-
-        ((TextView) card.findViewById(R.id.drinkRating)).setVisibility(View.GONE);
+        ((ImageView) card.findViewById(R.id.drinkImage)).setImageResource(product.imageRes);
+        ((ImageView) card.findViewById(R.id.drinkImage)).setContentDescription(product.name);
+        ((TextView) card.findViewById(R.id.drinkRating)).setText(getString(R.string.home_rating_format, product.rating));
         TextView name = card.findViewById(R.id.drinkName);
         name.setText(product.name);
         name.setTypeface(FontUtils.inter(this, 600));
-        ((TextView) card.findViewById(R.id.drinkDescription)).setText(product.description == null ? "" : product.description);
+        ((TextView) card.findViewById(R.id.drinkDescription)).setText(product.description);
         TextView price = card.findViewById(R.id.drinkPrice);
-        price.setText(NumberFormat.getIntegerInstance(new Locale("vi", "VN")).format(
-                product.price == null ? 0 : Math.round(product.price)) + " đ");
+        price.setText(String.format(Locale.getDefault(), "%,d\u0111", CartOptions.price(product, "S")));
         price.setTypeface(FontUtils.inter(this, 700));
         ImageButton favorite = card.findViewById(R.id.favoriteDrinkButton);
-        favorite.setVisibility(View.GONE);
+        updateFavoriteIcon(favorite, product);
+        favorite.setOnClickListener(view -> toggleFavorite(product));
         TextView add = card.findViewById(R.id.addDrinkButton);
-        add.setContentDescription(getString(R.string.home_add_product,
-                product.name == null ? "sản phẩm" : product.name));
+        add.setContentDescription(getString(R.string.home_add_product, product.name));
         add.setOnClickListener(view -> addToCart(product));
         card.setOnClickListener(view -> addToCart(product));
-        image.setOnClickListener(view -> addToCart(product));
     }
 
-    private void addToCart(ProductDto remote) {
-        if (remote == null) return;
-        Product catalogProduct = toCatalogProduct(remote);
-        if (catalogProduct == null) {
-            Toast.makeText(this, "Không thể chọn món này.", Toast.LENGTH_SHORT).show();
+    private void updateFavoriteIcon(ImageButton button, DrinkProduct product) {
+        boolean favorite = Boolean.TRUE.equals(this.favorites.get(product.id));
+        button.setImageResource(favorite ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite_border);
+        button.setContentDescription(getString(favorite ? R.string.home_favorite_removed : R.string.home_favorite_added,
+                product.name));
+    }
+
+    private void toggleFavorite(DrinkProduct product) {
+        boolean value = !Boolean.TRUE.equals(favorites.get(product.id));
+        favorites.put(product.id, value);
+        preferences.edit().putBoolean("favorite_" + product.id, value).apply();
+        Toast.makeText(this, getString(value ? R.string.home_favorite_added : R.string.home_favorite_removed,
+                product.name), Toast.LENGTH_SHORT).show();
+        renderProducts(currentQuery());
+    }
+
+    private void addToCart(DrinkProduct product) {
+        int id;
+        try { id=Integer.parseInt(product.id); } catch(Exception ignored) { id=MenuCatalog.getProducts().indexOf(product)+1; }
+        for(com.coffeeshop.client.catalog.model.Product item:com.coffeeshop.client.catalog.data.ProductRepository.getProducts()) {
+            if(item.id!=id) continue;
+            ProductOptionsSheet.show(this,item,null,(options,quantity)->{
+                CartRepository.add(this,item,options,quantity); loadState();
+                String size=options.size==null?getString(R.string.options_no_size):options.size.label;
+                com.google.android.material.snackbar.Snackbar.make(findViewById(android.R.id.content),getString(R.string.options_added_snackbar,item.name,size,CartRepository.totalQuantity(this)),com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show();
+            });
             return;
         }
-        ProductOptionsSheet.show(this, catalogProduct, null, (options, quantity) -> {
-            CartRepository.add(this, catalogProduct, options, quantity);
-            String size = options.size == null ? getString(R.string.options_no_size) : options.size.label;
-            Snackbar.make(findViewById(android.R.id.content),
-                    getString(R.string.options_added_snackbar, catalogProduct.name, size, CartRepository.totalQuantity(this)),
-                    Snackbar.LENGTH_SHORT).show();
-        });
     }
-
-    private Product toCatalogProduct(ProductDto remote) {
-        if (remote == null || remote.id == null) return null;
-        int id = remote.id.intValue();
-        int imageRes = getProductImageResource(remote.name);
-        if (imageRes == 0) imageRes = R.drawable.logo_moc_mien_icon;
-        int priceInt = remote.price == null ? 0 : (int) Math.round(remote.price);
-        return new Product(
-                id,
-                remote.name == null ? "" : remote.name,
-                remote.category == null ? "" : remote.category,
-                priceInt,
-                4.9f,
-                20,
-                remote.description == null ? "" : remote.description,
-                imageRes,
-                getProductImageResource(remote.name) == 0 ? remote.imageUrl : null
-        );
-    }
-
-    private int getProductImageResource(String productName) {
-        String name = normalize(productName);
-        if (name.contains("nau da")) return R.drawable.nauda;
-        if (name.contains("sua da") || name.contains("ca phe sua")) return R.drawable.nauda;
-        if (name.contains("bac xiu")) return R.drawable.bacxiu;
-        if (name.contains("phin") || name.contains("americano")) return R.drawable.caphephin;
-        if (name.contains("xoai")) return R.drawable.traxoaichanhday1;
-        if (name.contains("sen")) return R.drawable.trasenvang;
-        if (name.contains("xi muoi") || name.contains("coc")) return R.drawable.tracocximuoi;
-        if (name.contains("sa")) return R.drawable.tradaocamxa;
-        if (name.contains("dua luoi")) return R.drawable.tradualuoi;
-        if (name.contains("thach dao")) return R.drawable.trathachdao;
-        if (name.contains("vai")) return R.drawable.travai;
-        if (name.contains("cacao")) return R.drawable.cacaodaxay;
-        if (name.contains("matcha")) return R.drawable.matchalatte;
-        if (name.contains("cheese")) return R.drawable.cheesecake;
-        if (name.contains("croissant")) return R.drawable.croissant;
-        if (name.contains("tiramisu")) return R.drawable.timarisu;
-        return 0;
-    }
-
-    private void confirmLogout() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.logout_button)
-                .setMessage("Bạn muốn đăng xuất khỏi tài khoản?")
-                .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(R.string.logout_button, (dialog, which) -> logout())
-                .show();
-    }
-
-    private void logout() {
-        TokenManager.getInstance(this).clear();
-        Intent intent = new Intent(this, LoginActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
-
     private void setupNavigation() {
         findViewById(R.id.navHomeItem).setOnClickListener(view -> {
-            startActivity(new Intent(this, HomeActivity.class));
             finish();
         });
-        findViewById(R.id.navMenuItem).setOnClickListener(view ->
-                ((ScrollView) findViewById(R.id.menuScrollView)).smoothScrollTo(0, 0));
-        findViewById(R.id.navOrdersItem).setOnClickListener(view ->
-                startActivity(new Intent(this, OrdersActivity.class)));
-        findViewById(R.id.navProfileItem).setOnClickListener(view ->
-                startActivity(new Intent(this, ProfileActivity.class)));
+        findViewById(R.id.navMenuItem).setOnClickListener(view -> ((ScrollView) findViewById(R.id.menuScrollView)).smoothScrollTo(0, 0));
+        findViewById(R.id.navOrdersItem).setOnClickListener(view -> startActivity(new Intent(this, OrdersActivity.class)));
+        View.OnClickListener profile = view -> startActivity(new Intent(this, ProfileActivity.class));
+        findViewById(R.id.navProfileItem).setOnClickListener(profile);
+    }
+
+    private void showCart() {
+        if (cart.isEmpty()) {
+            new AlertDialog.Builder(this).setTitle(R.string.nav_orders).setMessage(R.string.home_empty_cart)
+                    .setPositiveButton(android.R.string.ok, null).show();
+            return;
+        }
+        StringBuilder summary = new StringBuilder();
+        int total = 0;
+        for (Map.Entry<String, Integer> entry : cart.entrySet()) {
+            String[] parts = entry.getKey().split("\\|", 2);
+            for (DrinkProduct product : products) if (product.id.equals(parts[0])) {
+                CartOptions.Selection option = parts.length > 1 ? CartOptions.parseToken(parts[1]) : null;
+                if (option == null) continue;
+                if (summary.length() > 0) summary.append('\n');
+                summary.append(product.name).append(" \u00b7 ").append(CartOptions.description(option)).append(" \u00d7 ").append(entry.getValue());
+                total += CartOptions.price(product, option) * entry.getValue();
+            }
+        }
+        summary.append("\n\n").append(getString(R.string.home_favorite_subtotal,
+                String.format(Locale.getDefault(), "%,d\u0111", total)));
+        new AlertDialog.Builder(this).setTitle(R.string.home_cart_title).setMessage(summary.toString())
+                .setPositiveButton(android.R.string.ok, null).show();
     }
 
     private String normalize(String value) {
         String decomposed = Normalizer.normalize(value == null ? "" : value.toLowerCase(Locale.ROOT), Normalizer.Form.NFD);
-        return decomposed.replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replace('đ', 'd').trim();
+        return decomposed.replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replace('\u0111', 'd').trim();
     }
 
     private int dp(float value) {
