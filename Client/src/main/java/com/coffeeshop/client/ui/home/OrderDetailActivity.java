@@ -86,21 +86,23 @@ public class OrderDetailActivity extends Activity {
 
         codeText.setText(order.id);
         dateText.setText(order.createdAt);
-        addressText.setText(order.receiverName + " · " + order.phone + "\n" + order.address);
+        addressText.setText(order.remoteOrder ? "Thông tin giao hàng chưa có trên đơn hàng này"
+                : order.receiverName + " · " + order.phone + "\n" + order.address);
 
-        String methodStr = "Tiền mặt khi nhận hàng (COD)";
-        if (order.paymentMethod == PaymentMethod.WALLET) {
-            methodStr = "Ví điện tử MoMo / ZaloPay";
-        } else if (order.paymentMethod == PaymentMethod.CARD) {
-            methodStr = "Thẻ ngân hàng (ATM / Credit)";
-        }
-        paymentText.setText("Thanh toán: " + methodStr);
+        String methodStr = order.getPaymentSnapshotText();
+        paymentText.setText(order.remoteOrder ? "Thông tin thanh toán chưa có trên đơn hàng này"
+                : "Thanh toán: " + methodStr);
 
-        if (order.status == OrderStatus.PREPARING) {
+        if (order.status == OrderStatus.PENDING) {
+            statusChip.setText("CHỜ XÁC NHẬN");
+            statusChip.setBackgroundColor(Color.parseColor("#FFF3E0"));
+            statusChip.setTextColor(Color.parseColor("#EF6C00"));
+            btnCancelOrder.setVisibility(View.GONE);
+        } else if (order.status == OrderStatus.CONFIRMED || order.status == OrderStatus.PREPARING) {
             statusChip.setText("ĐANG CHUẨN BỊ");
             statusChip.setBackgroundColor(Color.parseColor("#FFF3E0"));
             statusChip.setTextColor(Color.parseColor("#EF6C00"));
-            btnCancelOrder.setVisibility(View.VISIBLE);
+            btnCancelOrder.setVisibility(order.remoteOrder ? View.GONE : View.VISIBLE);
         } else if (order.status == OrderStatus.COMPLETED) {
             statusChip.setText("HOÀN THÀNH");
             statusChip.setBackgroundColor(Color.parseColor("#E8F5E9"));

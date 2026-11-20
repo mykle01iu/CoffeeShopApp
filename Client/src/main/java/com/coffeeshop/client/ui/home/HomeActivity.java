@@ -1,34 +1,33 @@
 package com.coffeeshop.client.ui.home;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.coffeeshop.client.data.CartManager;
 import com.coffeeshop.client.data.CartRepository;
-import com.coffeeshop.client.catalog.data.ProductRepository;
 import com.google.android.material.snackbar.Snackbar;
 import com.coffeeshop.client.data.AddressRepository;
 import com.coffeeshop.client.model.Address;
 import com.coffeeshop.client.data.FavoriteRepository;
-import com.coffeeshop.client.data.MockData;
+import com.coffeeshop.client.data.remote.ApiResult;
+import com.coffeeshop.client.data.remote.dto.CategoryDto;
+import com.coffeeshop.client.data.remote.dto.ProductDto;
 import com.coffeeshop.client.R;
 import com.coffeeshop.client.model.Category;
 import com.coffeeshop.client.model.Product;
@@ -44,10 +43,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class HomeActivity extends Activity {
-    private final List<DrinkProduct> products = MenuCatalog.getProducts();
-    private final List<Product> homeProducts = MockData.getProducts();
-    private final Map<String, Integer> selectedDrinks = new LinkedHashMap<>();
+public class HomeActivity extends androidx.appcompat.app.AppCompatActivity {
+    private final List<Product> homeProducts = new ArrayList<>();
+    private final List<Category> homeCategories = new ArrayList<>();
     private final Map<String, Boolean> favorites = new LinkedHashMap<>();
     private ScrollView homeScrollView;
     private RecyclerView productsRecyclerView;
@@ -58,6 +56,7 @@ public class HomeActivity extends Activity {
     private SharedPreferences homePreferences;
     private String selectedCategory = "all";
     private boolean favoritesOnly;
+    private MenuViewModel menuViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +77,11 @@ public class HomeActivity extends Activity {
         emptyProducts = findViewById(R.id.homeEmptyProducts);
         homePreferences = getSharedPreferences("moc_mien_home", MODE_PRIVATE);
 
-        loadSavedState();
-
         RecyclerView categoryRecyclerView = findViewById(R.id.categoryRecyclerView);
         categoryRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         categoryRecyclerView.setHasFixedSize(true);
-        categoryAdapter = new CategoryAdapter(this, MockData.getCategories(), this::selectCategory);
+        homeCategories.add(new Category("all", getString(R.string.category_all), R.drawable.ic_menu));
+        categoryAdapter = new CategoryAdapter(this, homeCategories, this::selectCategory);
         categoryRecyclerView.setAdapter(categoryAdapter);
 
         productAdapter = new ProductAdapter(homeProducts, dp(200), dp(14), new ProductAdapter.OnProductActionListener() {
@@ -94,14 +92,12 @@ public class HomeActivity extends Activity {
 
             @Override
             public void onProductClick(Product product) {
-                DrinkProduct source = findDrinkProduct(product.getId());
-                if (source != null) addDrink(source);
+                addProduct(product);
             }
 
             @Override
             public void onFavoriteClick(Product product) {
-                DrinkProduct source = findDrinkProduct(product.getId());
-                if (source != null) toggleFavorite(source);
+                toggleFavorite(product);
             }
         });
         productsRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
@@ -140,7 +136,11 @@ public class HomeActivity extends Activity {
         });
         navMenu.setOnClickListener(view -> startActivity(new Intent(this, MenuActivity.class)));
 
-        updateProducts("");
+        menuViewModel = new ViewModelProvider(this).get(MenuViewModel.class);
+        menuViewModel.getCategories().observe(this, this::onCategoriesResult);
+        menuViewModel.getProducts().observe(this, this::onProductsResult);
+        menuViewModel.loadCategories();
+        menuViewModel.loadProducts(null);
         updateCartBadge();
     }
 
@@ -155,7 +155,7 @@ public class HomeActivity extends Activity {
             addressDescription.setText(R.string.home_address_description);
         }
         updateCartBadge();
-        updateProducts(currentQuery());
+        if (productAdapter != null) updateProducts(currentQuery());
     }
 
     @Override
@@ -164,11 +164,72 @@ public class HomeActivity extends Activity {
         super.onSaveInstanceState(outState);
     }
 
-    private void loadSavedState() {
-        selectedDrinks.clear();
-        for (DrinkProduct product : products) {
-            int count = homePreferences.getInt("cart_" + product.id, 0);
-            if (count > 0) selectedDrinks.put(product.id, count);
+    private void onCategoriesResult(ApiResult<List<CategoryDto>> result) {
+        if (result == null || result.status != ApiResult.Status.SUCCESS) return;
+        homeCategories.clear();
+        homeCategories.add(new Category("all", getString(R.string.category_all), R.drawable.ic_menu));
+        if (result.data != null) for (CategoryDto item : result.data) {
+            if (item == null || Boolean.FALSE.equals(item.available) || item.code == null) continue;
+            homeCategories.add(new Category(item.code, item.name == null ? item.code : item.name, categoryIcon(item.code)));
+        }
+        categoryAdapter.notifyDataSetChanged();
+    }
+
+    private void onProductsResult(ApiResult<List<ProductDto>> result) {
+        if (result == null || result.status == ApiResult.Status.LOADING) return;
+        if (result.status == ApiResult.Status.ERROR) {
+            homeProducts.clear();
+            updateProducts(currentQuery());
+            Toast.makeText(this, "Không tải được sản phẩm. Vui lòng thử lại.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        homeProducts.clear();
+        if (result.data != null) for (ProductDto dto : result.data) {
+            if (dto == null || Boolean.FALSE.equals(dto.available) || dto.id == null) continue;
+            homeProducts.add(toHomeProduct(dto));
+        }
+        updateProducts(currentQuery());
+    }
+
+    private Product toHomeProduct(ProductDto dto) {
+        String id = String.valueOf(dto.id);
+        return new Product(id, categoryCode(dto.category), dto.name == null ? "" : dto.name,
+                dto.description == null ? "" : dto.description,
+                dto.price == null ? 0 : dto.price, 0f, imageForProduct(dto.id), dto.imageUrl);
+    }
+
+    private String categoryCode(String category) {
+        if (category == null) return "";
+        String value = normalize(category);
+        if (value.contains("ca phe") || value.equals("coffee")) return "coffee";
+        if (value.contains("tra") || value.equals("tea")) return "tea";
+        if (value.contains("banh") || value.equals("snack")) return "snack";
+        if (value.contains("da xay") || value.equals("smoothie")) return "smoothie";
+        if (value.contains("khac") || value.equals("latte")) return "other";
+        return value.replace(' ', '_');
+    }
+
+    private int categoryIcon(String code) {
+        switch (categoryCode(code)) {
+            case "coffee": return R.drawable.ic_splash_cup;
+            case "tea": return R.drawable.ic_splash_cup;
+            case "snack": return R.drawable.img_snack_croissant;
+            case "smoothie": return R.drawable.img_mango_smoothie;
+            default: return R.drawable.ic_menu;
+        }
+    }
+
+    private int imageForProduct(Long id) {
+        if (id == null) return R.drawable.ic_menu;
+        switch (id.intValue()) {
+            case 1: return R.drawable.nauda; case 2: return R.drawable.bacxiu;
+            case 3: return R.drawable.caphephin; case 4: return R.drawable.traxoaichanhday1;
+            case 5: return R.drawable.trasenvang; case 6: return R.drawable.tracocximuoi;
+            case 7: return R.drawable.tradaocamxa; case 8: return R.drawable.tradualuoi;
+            case 9: return R.drawable.trathachdao; case 10: return R.drawable.travai;
+            case 11: return R.drawable.cacaodaxay; case 12: return R.drawable.matchalatte;
+            case 13: return R.drawable.cheesecake; case 14: return R.drawable.croissant;
+            case 15: return R.drawable.timarisu; default: return R.drawable.ic_menu;
         }
     }
 
@@ -199,7 +260,7 @@ public class HomeActivity extends Activity {
     }
 
     private void selectCategory(Category category) {
-        selectedCategory = category.getId();
+        selectedCategory = categoryCode(category.getId());
         updateProducts(currentQuery());
     }
 
@@ -246,67 +307,31 @@ public class HomeActivity extends Activity {
         return FavoriteRepository.isFavorite(this, numId) || Boolean.TRUE.equals(favorites.get(product.getId()));
     }
 
-    private void updateFavoriteIcon(ImageButton button, DrinkProduct product) {
-        int numId = parseNumericId(product.id);
-        boolean isFavorite = FavoriteRepository.isFavorite(this, numId) || Boolean.TRUE.equals(favorites.get(product.id));
-        button.setImageResource(isFavorite ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite_border);
-        button.setColorFilter(Color.parseColor(isFavorite ? "#E53935" : "#7D6C61"));
-        button.setContentDescription(getString(isFavorite ? R.string.home_favorite_removed : R.string.home_favorite_added, product.name));
+    private void addProduct(Product product) {
+        int id = parseNumericId(product.getId());
+        if (id <= 0) return;
+        com.coffeeshop.client.catalog.model.Product item = new com.coffeeshop.client.catalog.model.Product(
+                id, product.getName(), product.getCategoryId(), (int) Math.round(product.getPrice()),
+                product.getRating(), 0, product.getDescription(), product.getImageRes(), product.getImageUrl());
+        ProductOptionsSheet.show(this, item, null, (options, quantity) -> {
+            CartRepository.add(this, item, options, quantity);
+            updateCartBadge();
+            String size = options.size == null ? getString(R.string.options_no_size) : options.size.label;
+            Snackbar.make(findViewById(android.R.id.content), getString(R.string.options_added_snackbar, item.name, size, CartRepository.totalQuantity(this)), Snackbar.LENGTH_SHORT).show();
+        });
     }
-
-    private void addDrink(DrinkProduct product) {
-        if (product == null) return;
-        int id = parseNumericId(product.id);
-        for (com.coffeeshop.client.catalog.model.Product item : ProductRepository.getProducts()) {
-            if (item.id != id) continue;
-            ProductOptionsSheet.show(this, item, null, (options, quantity) -> {
-                CartRepository.add(this, item, options, quantity);
-                updateCartBadge();
-                String size = options.size == null ? getString(R.string.options_no_size) : options.size.label;
-                Snackbar.make(findViewById(android.R.id.content), getString(R.string.options_added_snackbar, item.name, size, CartRepository.totalQuantity(this)), Snackbar.LENGTH_SHORT).show();
-            });
-            return;
-        }
-    }
-    private void toggleFavorite(DrinkProduct product) {
-        int numId = parseNumericId(product.id);
+    private void toggleFavorite(Product product) {
+        int numId = parseNumericId(product.getId());
         boolean isFavorite = FavoriteRepository.toggleFavorite(this, numId);
-        favorites.put(product.id, isFavorite);
-        homePreferences.edit().putBoolean("favorite_" + product.id, isFavorite).apply();
-        Toast.makeText(this, getString(isFavorite ? R.string.home_favorite_added : R.string.home_favorite_removed, product.name), Toast.LENGTH_SHORT).show();
+        favorites.put(product.getId(), isFavorite);
+        homePreferences.edit().putBoolean("favorite_" + product.getId(), isFavorite).apply();
+        Toast.makeText(this, getString(isFavorite ? R.string.home_favorite_added : R.string.home_favorite_removed, product.getName()), Toast.LENGTH_SHORT).show();
         updateProducts(currentQuery());
     }
 
     private int parseNumericId(String stringId) {
         if (stringId == null) return 0;
-        switch (stringId) {
-            case "nau_da": return 1;
-            case "bac_xiu": return 2;
-            case "cafe_phin": return 3;
-            case "tra_xoai_chanh_day": return 4;
-            case "tra_sen_vang": return 5;
-            case "tra_coc_xi_muoi": return 6;
-            case "tra_dao_cam_xa": case "peach_tea": return 7;
-            case "tra_dua_luoi": return 8;
-            case "tra_thach_dao": return 9;
-            case "tra_vai": case "lychee_tea": return 10;
-            case "cacao_da_xay": case "cocoa_ice": return 11;
-            case "matcha_latte": return 12;
-            case "cheese_cake": return 13;
-            case "croissant": return 14;
-            case "tiramisu": return 15;
-            default:
-                try { return Integer.parseInt(stringId); } catch (Exception e) { return 0; }
-        }
-    }
-
-    private DrinkProduct findProduct(String id) {
-        for (DrinkProduct product : products) if (product.id.equals(id)) return product;
-        return null;
-    }
-
-    private DrinkProduct findDrinkProduct(String id) {
-        return findProduct(id);
+        try { return Integer.parseInt(stringId); } catch (Exception e) { return 0; }
     }
 
     private String normalize(String value) {

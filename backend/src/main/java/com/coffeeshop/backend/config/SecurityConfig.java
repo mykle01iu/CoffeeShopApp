@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -42,6 +43,9 @@ public class SecurityConfig {
                         )
                 )
 
+                .exceptionHandling(errors -> errors.authenticationEntryPoint(
+                        new HttpStatusEntryPoint(org.springframework.http.HttpStatus.UNAUTHORIZED)))
+
                 .authorizeHttpRequests(auth -> auth
 
                         // Cho phep request noi bo cua Spring
@@ -56,8 +60,12 @@ public class SecurityConfig {
 
                         .requestMatchers(
                                 "/api/health",
-                                "/api/auth/**"
+                                "/api/auth/**",
+                                "/images/products/**"
                         ).permitAll()
+
+                        // Don hang va lich su don can JWT hop le
+                        .requestMatchers("/api/orders", "/api/orders/**").authenticated()
 
                         // ==============================
                         // 2. PRODUCT API
