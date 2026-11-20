@@ -3,13 +3,12 @@ package com.example.myapplication.ui;
 import android.app.Activity;
 import android.graphics.Color;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.example.myapplication.data.MockOrders;
+import com.example.myapplication.data.BackendApi;
 import com.example.myapplication.model.Order;
 
 import java.util.ArrayList;
@@ -17,16 +16,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class OrderScreen {
-    private static final List<String> FILTERS = Arrays.asList("Tất cả", "Chờ xác nhận", "Đang pha chế", "Đang giao", "Hoàn thành", "Đã hủy");
+    private static final List<String> FILTERS = Arrays.asList(
+            "Tất cả", "Chờ xác nhận", "Đã xác nhận", "Đang chuẩn bị", "Hoàn thành", "Đã hủy");
     private final Activity activity;
     private final Navigator navigator;
-    private final List<Order> orders = MockOrders.all();
+    private final BackendApi backendApi;
+    private List<Order> orders = new ArrayList<>();
     private LinearLayout filters, orderList;
+    private TextView subtitle;
     private String selected = "Tất cả";
 
-    public OrderScreen(Activity activity, Navigator navigator) {
+    public OrderScreen(Activity activity, Navigator navigator, BackendApi backendApi) {
         this.activity = activity;
         this.navigator = navigator;
+        this.backendApi = backendApi;
     }
 
     public void show() {
@@ -44,17 +47,15 @@ public class OrderScreen {
         header.addView(back, OrderUi.params(OrderUi.dp(activity, 44), OrderUi.dp(activity, 44)));
         back.setOnClickListener(v -> navigator.showDashboard());
         LinearLayout titleColumn = OrderUi.column(activity);
-        TextView eyebrow = OrderUi.text(activity, "MỘC MIÊN  /  QUẢN TRỊ", 10, OrderUi.COFFEE, true);
-        TextView title = OrderUi.text(activity, "Đơn hàng", 25, OrderUi.INK, true);
-        titleColumn.addView(eyebrow);
-        titleColumn.addView(title);
+        titleColumn.addView(OrderUi.text(activity, "MỘC MIÊN / QUẢN TRỊ", 10, OrderUi.COFFEE, true));
+        titleColumn.addView(OrderUi.text(activity, "Đơn hàng", 25, OrderUi.INK, true));
         LinearLayout.LayoutParams titleParams = OrderUi.params(0, -2);
         titleParams.weight = 1;
         titleParams.leftMargin = OrderUi.dp(activity, 12);
         header.addView(titleColumn, titleParams);
         root.addView(header);
 
-        TextView subtitle = OrderUi.text(activity, orders.size() + " đơn hàng mẫu · Cập nhật hôm nay", 13, OrderUi.MUTED, false);
+        subtitle = OrderUi.text(activity, "Đang tải đơn hàng...", 13, OrderUi.MUTED, false);
         LinearLayout.LayoutParams subParams = OrderUi.params(-2, -2);
         subParams.topMargin = OrderUi.dp(activity, 8);
         root.addView(subtitle, subParams);
@@ -73,12 +74,25 @@ public class OrderScreen {
         activity.setContentView(scroll);
         renderFilters();
         renderOrders();
+
+        backendApi.getAdminOrders(new BackendApi.Callback<List<Order>>() {
+            @Override public void onSuccess(List<Order> result) {
+                orders = result == null ? new ArrayList<>() : result;
+                subtitle.setText(orders.size() + " đơn hàng từ backend");
+                renderOrders();
+            }
+            @Override public void onError(BackendApi.ApiError error) {
+                subtitle.setText("Không tải được đơn hàng: " + error.message);
+                renderOrders();
+            }
+        });
     }
 
     private void renderFilters() {
         filters.removeAllViews();
         for (String filter : FILTERS) {
-            TextView chip = OrderUi.text(activity, filter, 12, filter.equals(selected) ? Color.WHITE : OrderUi.COFFEE, true);
+            TextView chip = OrderUi.text(activity, filter, 12,
+                    filter.equals(selected) ? Color.WHITE : OrderUi.COFFEE, true);
             chip.setGravity(Gravity.CENTER);
             chip.setPadding(OrderUi.dp(activity, 14), OrderUi.dp(activity, 10), OrderUi.dp(activity, 14), OrderUi.dp(activity, 10));
             chip.setBackground(OrderUi.shape(filter.equals(selected) ? OrderUi.COFFEE : Color.WHITE, OrderUi.dp(activity, 20)));
@@ -90,6 +104,7 @@ public class OrderScreen {
     }
 
     private void renderOrders() {
+        if (orderList == null) return;
         orderList.removeAllViews();
         List<Order> visible = new ArrayList<>();
         for (Order order : orders) if (selected.equals("Tất cả") || order.status.equals(selected)) visible.add(order);
@@ -127,7 +142,9 @@ public class OrderScreen {
             orderList.addView(card, p);
         }
         if (visible.isEmpty()) {
-            TextView empty = OrderUi.text(activity, "Không có đơn hàng ở trạng thái này.", 14, OrderUi.MUTED, false);
+            TextView empty = OrderUi.text(activity,
+                    orders.isEmpty() ? "Chưa có đơn hàng trên backend." : "Không có đơn hàng ở trạng thái này.",
+                    14, OrderUi.MUTED, false);
             empty.setGravity(Gravity.CENTER);
             empty.setPadding(0, OrderUi.dp(activity, 36), 0, OrderUi.dp(activity, 36));
             orderList.addView(empty);
