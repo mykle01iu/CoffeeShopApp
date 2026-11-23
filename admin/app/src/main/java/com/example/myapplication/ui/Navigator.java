@@ -8,6 +8,7 @@ public interface Navigator {
     void showDashboard();
     void showRevenue();
     void showCategories();
+    void showUsers();
     void showOrders();
     void showOrderDetail(Order order);
     void showProducts(Category category);

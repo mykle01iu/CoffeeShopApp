@@ -25,6 +25,7 @@ import com.example.myapplication.ui.RevenueScreen;
 import com.example.myapplication.ui.ProductScreen;
 import com.example.myapplication.ui.OrderScreen;
 import com.example.myapplication.ui.OrderDetailScreen;
+import com.example.myapplication.ui.UserDirectoryScreen;
 
 public class MainActivity extends AppCompatActivity
         implements Navigator, LoginScreen.LocalNetworkPermissionGate {
@@ -152,6 +153,17 @@ public class MainActivity extends AppCompatActivity
         if (!requireLogin()) return;
         backCallback.setEnabled(true);
         new CategoryScreen(this, this, backendApi, session).show();
+    }
+
+    @Override
+    public void showUsers() {
+        if (!requireLogin()) return;
+        if (!accounts.isAdmin()) {
+            Toast.makeText(this, "Chức năng chỉ dành cho ADMIN.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        backCallback.setEnabled(true);
+        new UserDirectoryScreen(this, this, backendApi).show();
     }
 
     @Override
