@@ -33,10 +33,8 @@ public class SecurityConfig {
             throws Exception {
 
         http
-                // REST API su dung JWT, khong dung CSRF token
                 .csrf(csrf -> csrf.disable())
 
-                // Khong luu session tren server
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
@@ -64,28 +62,24 @@ public class SecurityConfig {
                         // 2. PRODUCT API
                         // ==============================
 
-                        // Tat ca duoc xem san pham
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/products",
                                 "/api/products/**"
                         ).permitAll()
 
-                        // Chi ADMIN duoc them san pham
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/products",
                                 "/api/products/**"
                         ).hasRole("ADMIN")
 
-                        // Chi ADMIN duoc sua san pham
                         .requestMatchers(
                                 HttpMethod.PUT,
                                 "/api/products",
                                 "/api/products/**"
                         ).hasRole("ADMIN")
 
-                        // Chi ADMIN duoc xoa san pham
                         .requestMatchers(
                                 HttpMethod.DELETE,
                                 "/api/products",
@@ -96,26 +90,22 @@ public class SecurityConfig {
                         // 3. CATEGORY API
                         // ==============================
 
-                        // Tat ca duoc xem danh muc
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/categories",
                                 "/api/categories/**"
                         ).permitAll()
 
-                        // Chi ADMIN duoc them danh muc
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/categories"
                         ).hasRole("ADMIN")
 
-                        // Chi ADMIN duoc sua danh muc
                         .requestMatchers(
                                 HttpMethod.PUT,
                                 "/api/categories/**"
                         ).hasRole("ADMIN")
 
-                        // Chi ADMIN duoc xoa danh muc
                         .requestMatchers(
                                 HttpMethod.DELETE,
                                 "/api/categories/**"
@@ -125,7 +115,7 @@ public class SecurityConfig {
                         // 4. ORDER API - NGAY 6
                         // ==============================
 
-                        // Chi ADMIN duoc xem tat ca don hang
+                        // Chi ADMIN xem tat ca don hang
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/orders/admin"
@@ -137,23 +127,42 @@ public class SecurityConfig {
                                 "/api/orders"
                         ).authenticated()
 
-                        // USER va ADMIN xem don cua minh
+                        // USER xem don cua minh
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/orders/my"
                         ).authenticated()
 
-                        // Cac Order API khac yeu cau dang nhap
+                        // ==============================
+                        // 5. ORDER STATUS API - NGAY 7
+                        // ==============================
+
+                        // Chi ADMIN duoc cap nhat trang thai
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/orders/*/status"
+                        ).hasRole("ADMIN")
+
+                        // Xem lich su: can dang nhap
+                        // Service se kiem tra chu don hoac ADMIN
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/orders/*/history"
+                        ).authenticated()
+
+                        // ==============================
+                        // 6. OTHER ORDER API
+                        // ==============================
+
                         .requestMatchers(
                                 "/api/orders",
                                 "/api/orders/**"
                         ).authenticated()
 
                         // ==============================
-                        // 5. OTHER API
+                        // 7. OTHER API
                         // ==============================
 
-                        // API con lai bat buoc dang nhap
                         .anyRequest().authenticated()
                 )
 
