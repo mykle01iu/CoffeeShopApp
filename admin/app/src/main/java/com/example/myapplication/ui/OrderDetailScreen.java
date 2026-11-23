@@ -1,23 +1,31 @@
 package com.example.myapplication.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.myapplication.data.BackendApi;
 import com.example.myapplication.model.Order;
+
+import java.util.List;
 
 public class OrderDetailScreen {
     private final Activity activity;
     private final Navigator navigator;
     private final Order order;
+    private final BackendApi backendApi;
+    private LinearLayout historySection;
 
-    public OrderDetailScreen(Activity activity, Navigator navigator, Order order) {
+    public OrderDetailScreen(Activity activity, Navigator navigator, Order order, BackendApi backendApi) {
         this.activity = activity;
         this.navigator = navigator;
         this.order = order;
+        this.backendApi = backendApi;
     }
 
     public void show() {
@@ -58,7 +66,25 @@ public class OrderDetailScreen {
         statusRow.addView(statusInfo, infoParams);
         statusRow.addView(OrderUi.badge(activity, order.status));
         statusCard.addView(statusRow);
+        if (hasNextStatus()) {
+            TextView updateStatus = OrderUi.text(activity, "Cập nhật trạng thái", 13, Color.WHITE, true);
+            updateStatus.setGravity(Gravity.CENTER);
+            updateStatus.setPadding(0, OrderUi.dp(activity, 11), 0, OrderUi.dp(activity, 11));
+            updateStatus.setBackground(OrderUi.shape(OrderUi.COFFEE, OrderUi.dp(activity, 12)));
+            LinearLayout.LayoutParams actionParams = OrderUi.params(-1, -2);
+            actionParams.topMargin = OrderUi.dp(activity, 14);
+            statusCard.addView(updateStatus, actionParams);
+            updateStatus.setOnClickListener(v -> showStatusChoices());
+        }
         root.addView(statusCard, statusParams);
+
+        historySection = section("Lịch sử trạng thái");
+        TextView historyLoading = OrderUi.text(activity, "Đang tải lịch sử...", 12, OrderUi.MUTED, false);
+        LinearLayout.LayoutParams historyLoadingParams = OrderUi.params(-1, -2);
+        historyLoadingParams.topMargin = OrderUi.dp(activity, 12);
+        historySection.addView(historyLoading, historyLoadingParams);
+        addSection(root, historySection);
+        loadHistory();
 
         LinearLayout customer = section("Khách hàng");
         addInfo(customer, "Tên khách", order.customer);
@@ -101,6 +127,66 @@ public class OrderDetailScreen {
         addSection(root, payment);
 
         activity.setContentView(scroll);
+    }
+
+    private long orderId() {
+        return Long.parseLong(order.id.replace("#", ""));
+    }
+
+    private boolean hasNextStatus() {
+        return "Chờ xác nhận".equals(order.status) || "Đang chuẩn bị".equals(order.status);
+    }
+
+    private void showStatusChoices() {
+        final String[] statuses;
+        final String[] labels;
+        if ("Chờ xác nhận".equals(order.status)) {
+            statuses = new String[]{"PREPARING", "CANCELLED"};
+            labels = new String[]{"Đang chuẩn bị", "Đã hủy"};
+        } else {
+            statuses = new String[]{"COMPLETED", "CANCELLED"};
+            labels = new String[]{"Hoàn thành", "Đã hủy"};
+        }
+        new AlertDialog.Builder(activity)
+                .setTitle("Chuyển trạng thái đơn")
+                .setItems(labels, (dialog, which) -> updateStatus(statuses[which]))
+                .setNegativeButton("Đóng", null)
+                .show();
+    }
+
+    private void updateStatus(String status) {
+        backendApi.updateOrderStatus(orderId(), status, new BackendApi.Callback<String>() {
+            @Override public void onSuccess(String result) {
+                Toast.makeText(activity, "Đã cập nhật trạng thái đơn hàng.", Toast.LENGTH_SHORT).show();
+                navigator.showOrders();
+            }
+            @Override public void onError(BackendApi.ApiError error) {
+                Toast.makeText(activity, "Không cập nhật được: " + error.message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void loadHistory() {
+        backendApi.getOrderHistory(orderId(), new BackendApi.Callback<List<String>>() {
+            @Override public void onSuccess(List<String> history) {
+                historySection.removeAllViews();
+                if (history == null || history.isEmpty()) {
+                    historySection.addView(OrderUi.text(activity, "Chưa có lịch sử trạng thái.", 12, OrderUi.MUTED, false));
+                    return;
+                }
+                for (String entry : history) {
+                    TextView row = OrderUi.text(activity, "•  " + entry, 12, OrderUi.INK, false);
+                    LinearLayout.LayoutParams params = OrderUi.params(-1, -2);
+                    params.topMargin = OrderUi.dp(activity, 10);
+                    historySection.addView(row, params);
+                }
+            }
+            @Override public void onError(BackendApi.ApiError error) {
+                historySection.removeAllViews();
+                historySection.addView(OrderUi.text(activity, "Không tải được lịch sử: " + error.message,
+                        12, OrderUi.MUTED, false));
+            }
+        });
     }
 
     private LinearLayout section(String title) {

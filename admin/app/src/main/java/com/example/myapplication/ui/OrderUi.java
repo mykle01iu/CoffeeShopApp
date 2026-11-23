@@ -58,8 +58,7 @@ final class OrderUi {
         int bg, fg;
         switch (status) {
             case "Chờ xác nhận": bg = Color.rgb(255, 243, 205); fg = Color.rgb(143, 94, 0); break;
-            case "Đang pha chế": bg = Color.rgb(232, 222, 255); fg = Color.rgb(92, 58, 150); break;
-            case "Đang giao": bg = Color.rgb(222, 237, 255); fg = Color.rgb(37, 91, 145); break;
+            case "Đang chuẩn bị": bg = Color.rgb(232, 222, 255); fg = Color.rgb(92, 58, 150); break;
             case "Hoàn thành": bg = Color.rgb(220, 244, 228); fg = Color.rgb(39, 112, 65); break;
             default: bg = Color.rgb(252, 226, 224); fg = Color.rgb(160, 54, 48); break;
         }

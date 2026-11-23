@@ -13,7 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.example.myapplication.R;
 import com.example.myapplication.auth.AccountStore;
-import com.example.myapplication.data.MockOrders;
+import com.example.myapplication.data.BackendApi;
 import com.example.myapplication.data.MockRevenue;
 import com.example.myapplication.model.Order;
 
@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.ArrayList;
 
 public class DashboardScreen {
 
@@ -33,11 +34,13 @@ public class DashboardScreen {
     private final Activity activity;
     private final Navigator navigator;
     private final AccountStore accounts;
+    private final BackendApi backendApi;
     public DashboardScreen(Activity activity, Navigator navigator,
-                           AccountStore accounts) {
+                           AccountStore accounts, BackendApi backendApi) {
         this.activity = activity;
         this.navigator = navigator;
         this.accounts = accounts;
+        this.backendApi = backendApi;
     }
 
     public void show() {
@@ -47,8 +50,8 @@ public class DashboardScreen {
         date.setText(new SimpleDateFormat("EEEE, dd/MM/yyyy", new Locale("vi", "VN")).format(new Date()));
         TextView greeting = activity.findViewById(R.id.dashboard_greeting);
         greeting.setText(accounts.isAdmin() ? "Chúc bạn một ngày làm việc hiệu quả." : "Chúc ca làm việc thuận lợi.");
-        populateOrderSummary();
-        populateRecentOrders();
+        showOrdersLoading();
+        loadOrders();
         populateRevenueSummary();
         populateLowStockAlerts();
 
@@ -83,23 +86,63 @@ public class DashboardScreen {
                 .setText(OrderUi.money(MockRevenue.forRange(monthStart, monthEnd)));
     }
 
-    private void populateOrderSummary() {
-        int waiting = 0, preparing = 0, delivery = 0;
-        for (Order order : MockOrders.all()) {
-            if ("Chờ xác nhận".equals(order.status)) waiting++;
-            else if ("Đang pha chế".equals(order.status)) preparing++;
-            else if ("Đang giao".equals(order.status)) delivery++;
-        }
-        ((TextView) activity.findViewById(R.id.orders_waiting_count)).setText(String.valueOf(waiting));
-        ((TextView) activity.findViewById(R.id.orders_preparing_count)).setText(String.valueOf(preparing));
-        ((TextView) activity.findViewById(R.id.orders_delivery_count)).setText(String.valueOf(delivery));
-        ((TextView) activity.findViewById(R.id.pending_orders_count)).setText(String.valueOf(waiting + preparing));
+    private void loadOrders() {
+        backendApi.getAdminOrders(new BackendApi.Callback<List<Order>>() {
+            @Override public void onSuccess(List<Order> result) {
+                if (activity.findViewById(R.id.dashboard_screen) == null) return;
+                List<Order> orders = result == null ? new ArrayList<>() : result;
+                populateOrderSummary(orders);
+                populateRecentOrders(orders);
+            }
+            @Override public void onError(BackendApi.ApiError error) {
+                if (activity.findViewById(R.id.dashboard_screen) == null) return;
+                setOrderCounts("—", "—", "—", "—");
+                showRecentOrdersMessage("Không tải được đơn hàng: " + error.message);
+            }
+        });
     }
 
-    private void populateRecentOrders() {
+    private void showOrdersLoading() {
+        setOrderCounts("…", "…", "…", "…");
+        showRecentOrdersMessage("Đang tải đơn hàng từ backend...");
+    }
+
+    private void setOrderCounts(String waiting, String preparing, String completed, String pending) {
+        ((TextView) activity.findViewById(R.id.orders_waiting_count)).setText(waiting);
+        ((TextView) activity.findViewById(R.id.orders_preparing_count)).setText(preparing);
+        ((TextView) activity.findViewById(R.id.orders_completed_count)).setText(completed);
+        ((TextView) activity.findViewById(R.id.pending_orders_count)).setText(pending);
+    }
+
+    private void populateOrderSummary(List<Order> orders) {
+        int waiting = 0, preparing = 0, completed = 0;
+        for (Order order : orders) {
+            if ("Chờ xác nhận".equals(order.status)) waiting++;
+            else if ("Đang chuẩn bị".equals(order.status)) preparing++;
+            else if ("Hoàn thành".equals(order.status)) completed++;
+        }
+        setOrderCounts(String.valueOf(waiting), String.valueOf(preparing),
+                String.valueOf(completed), String.valueOf(waiting + preparing));
+    }
+
+    private void showRecentOrdersMessage(String message) {
         LinearLayout list = activity.findViewById(R.id.recent_orders_list);
         list.removeAllViews();
-        List<Order> orders = MockOrders.all();
+        TextView status = new TextView(activity);
+        status.setText(message);
+        status.setTextColor(Color.rgb(136, 125, 117));
+        status.setTextSize(12);
+        status.setPadding(0, UiUtils.dp(activity, 8), 0, UiUtils.dp(activity, 8));
+        list.addView(status, new LinearLayout.LayoutParams(-1, -2));
+    }
+
+    private void populateRecentOrders(List<Order> orders) {
+        if (orders.isEmpty()) {
+            showRecentOrdersMessage("Chưa có đơn hàng trên backend.");
+            return;
+        }
+        LinearLayout list = activity.findViewById(R.id.recent_orders_list);
+        list.removeAllViews();
         int shown = Math.min(3, orders.size());
         for (int i = 0; i < shown; i++) {
             Order order = orders.get(i);
@@ -117,7 +160,7 @@ public class DashboardScreen {
             orderId.setTypeface(null, Typeface.BOLD);
             details.addView(orderId);
             TextView meta = new TextView(activity);
-            meta.setText(order.customer + " · " + order.dateTime.substring(order.dateTime.indexOf('·') + 1).trim());
+            meta.setText(order.customer + " · " + order.dateTime.replace('T', ' '));
             meta.setTextColor(Color.rgb(136, 125, 117));
             meta.setTextSize(11);
             LinearLayout.LayoutParams metaParams = new LinearLayout.LayoutParams(-2, -2);
@@ -152,16 +195,14 @@ public class DashboardScreen {
 
     private int statusColor(String status) {
         if ("Chờ xác nhận".equals(status)) return Color.rgb(143, 94, 0);
-        if ("Đang pha chế".equals(status)) return Color.rgb(92, 58, 150);
-        if ("Đang giao".equals(status)) return Color.rgb(37, 91, 145);
+        if ("Đang chuẩn bị".equals(status)) return Color.rgb(92, 58, 150);
         if ("Hoàn thành".equals(status)) return Color.rgb(39, 112, 65);
         return Color.rgb(160, 54, 48);
     }
 
     private int statusBackground(String status) {
         if ("Chờ xác nhận".equals(status)) return Color.rgb(255, 243, 205);
-        if ("Đang pha chế".equals(status)) return Color.rgb(232, 222, 255);
-        if ("Đang giao".equals(status)) return Color.rgb(222, 237, 255);
+        if ("Đang chuẩn bị".equals(status)) return Color.rgb(232, 222, 255);
         if ("Hoàn thành".equals(status)) return Color.rgb(220, 244, 228);
         return Color.rgb(252, 226, 224);
     }

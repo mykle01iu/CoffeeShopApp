@@ -17,7 +17,7 @@ import java.util.List;
 
 public class OrderScreen {
     private static final List<String> FILTERS = Arrays.asList(
-            "Tất cả", "Chờ xác nhận", "Đã xác nhận", "Đang chuẩn bị", "Hoàn thành", "Đã hủy");
+            "Tất cả", "Chờ xác nhận", "Đang chuẩn bị", "Hoàn thành", "Đã hủy");
     private final Activity activity;
     private final Navigator navigator;
     private final BackendApi backendApi;
