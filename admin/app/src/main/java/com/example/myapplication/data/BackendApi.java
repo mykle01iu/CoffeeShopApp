@@ -7,6 +7,7 @@ import com.example.myapplication.auth.SessionManager;
 import com.example.myapplication.model.Category;
 import com.example.myapplication.model.Product;
 import com.example.myapplication.model.Order;
+import com.example.myapplication.model.UserProfile;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -83,6 +84,21 @@ public final class BackendApi {
                         item.optBoolean("available", true)));
             }
             return products;
+        }, callback);
+    }
+
+    /** Loads the user directory available to administrators. */
+    public void getAdminUsers(Callback<List<UserProfile>> callback) {
+        request("GET", "users/admin", null, body -> {
+            JSONArray array = new JSONArray(body);
+            List<UserProfile> users = new ArrayList<>();
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject item = array.getJSONObject(i);
+                users.add(new UserProfile((int) item.optLong("id"),
+                        item.optString("name", ""), item.optString("email", ""),
+                        item.optString("role", ""), nullableString(item, "createdAt")));
+            }
+            return users;
         }, callback);
     }
 

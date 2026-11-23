@@ -59,6 +59,10 @@ public class DashboardScreen {
         approvalsButton.setVisibility(accounts.isAdmin() ? View.VISIBLE : View.GONE);
         approvalsButton.setOnClickListener(v -> new AccountApprovalDialog(activity, accounts).show());
 
+        View usersButton = activity.findViewById(R.id.open_users);
+        usersButton.setVisibility(accounts.isAdmin() ? View.VISIBLE : View.GONE);
+        usersButton.setOnClickListener(v -> navigator.showUsers());
+
         activity.findViewById(R.id.logout_button).setOnClickListener(v -> navigator.logout());
         activity.findViewById(R.id.open_orders).setOnClickListener(v -> navigator.showOrders());
         activity.findViewById(R.id.open_orders_recent).setOnClickListener(v -> navigator.showOrders());
