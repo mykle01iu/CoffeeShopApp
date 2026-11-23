@@ -3,11 +3,15 @@ package com.coffeeshop.backend.service;
 
 import com.coffeeshop.backend.dto.CreateOrderRequest;
 import com.coffeeshop.backend.dto.OrderResponse;
+
 import com.coffeeshop.backend.entity.Order;
 import com.coffeeshop.backend.entity.OrderDetail;
+import com.coffeeshop.backend.entity.OrderStatusHistory;
 import com.coffeeshop.backend.entity.Product;
 import com.coffeeshop.backend.entity.User;
+
 import com.coffeeshop.backend.repository.OrderRepository;
+import com.coffeeshop.backend.repository.OrderStatusHistoryRepository;
 import com.coffeeshop.backend.repository.ProductRepository;
 import com.coffeeshop.backend.repository.UserRepository;
 
@@ -28,15 +32,18 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final OrderStatusHistoryRepository historyRepository;
 
     public OrderService(
             OrderRepository orderRepository,
             ProductRepository productRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            OrderStatusHistoryRepository historyRepository) {
 
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.historyRepository = historyRepository;
     }
 
     // 1. Tao don hang
@@ -88,6 +95,7 @@ public class OrderService {
 
             // Khong cho trung productId
             if (!productIds.add(item.productId())) {
+
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
                         "San pham bi trung trong don"
@@ -128,9 +136,11 @@ public class OrderService {
 
             try {
                 price = price.setScale(
-                        2, RoundingMode.UNNECESSARY
+                        2,
+                        RoundingMode.UNNECESSARY
                 );
             } catch (ArithmeticException ex) {
+
                 throw new ResponseStatusException(
                         HttpStatus.CONFLICT,
                         "Gia san pham co qua 2 so thap phan"
@@ -152,6 +162,18 @@ public class OrderService {
         // Luu Order va OrderDetail trong 1 transaction
         Order savedOrder =
                 orderRepository.saveAndFlush(order);
+
+        // NGAY 7:
+        // Ghi lich su trang thai ban dau cua don hang
+        OrderStatusHistory history =
+                new OrderStatusHistory(
+                        savedOrder,
+                        null,
+                        savedOrder.getStatus(),
+                        email
+                );
+
+        historyRepository.save(history);
 
         return toResponse(savedOrder);
     }
