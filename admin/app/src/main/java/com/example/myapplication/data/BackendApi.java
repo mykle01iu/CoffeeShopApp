@@ -119,10 +119,40 @@ public final class BackendApi {
         }, callback);
     }
 
+    /** Updates an order using a backend OrderStatus enum value. */
+    public void updateOrderStatus(long orderId, String status, Callback<String> callback) {
+        JSONObject body = new JSONObject();
+        try {
+            body.put("status", status);
+        } catch (Exception exception) {
+            callback.onError(new ApiError(0, exception.getMessage()));
+            return;
+        }
+        request("PUT", "orders/" + orderId + "/status", body,
+                response -> new JSONObject(response).optString("toStatus", status), callback);
+    }
+
+    /** Loads status history for an order visible to the signed-in administrator. */
+    public void getOrderHistory(long orderId, Callback<List<String>> callback) {
+        request("GET", "orders/" + orderId + "/history", null, response -> {
+            JSONArray array = new JSONArray(response);
+            List<String> history = new ArrayList<>();
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject item = array.getJSONObject(i);
+                String fromStatus = item.isNull("fromStatus")
+                        ? "Tạo đơn" : displayOrderStatus(item.optString("fromStatus"));
+                String toStatus = displayOrderStatus(item.optString("toStatus", ""));
+                String changedAt = item.optString("changedAt", "");
+                history.add(fromStatus + " → " + toStatus
+                        + (changedAt.isEmpty() ? "" : " · " + changedAt));
+            }
+            return history;
+        }, callback);
+    }
+
     private static String displayOrderStatus(String status) {
         switch (status) {
             case "PENDING": return "Chờ xác nhận";
-            case "CONFIRMED": return "Đã xác nhận";
             case "PREPARING": return "Đang chuẩn bị";
             case "COMPLETED": return "Hoàn thành";
             case "CANCELLED": return "Đã hủy";

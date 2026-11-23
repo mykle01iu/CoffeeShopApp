@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity
         if (!requireLogin()) return;
         backCallback.setEnabled(false);
         showingOrderDetail = false;
-        new DashboardScreen(this, this, accounts).show();
+        new DashboardScreen(this, this, accounts, backendApi).show();
     }
 
     @Override
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity
         if (!requireLogin()) return;
         showingOrderDetail = true;
         backCallback.setEnabled(true);
-        new OrderDetailScreen(this, this, order).show();
+        new OrderDetailScreen(this, this, order, backendApi).show();
     }
 
     @Override
